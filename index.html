@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>Kards 卡组图鉴 · 简约卡片</title>
-  <!-- Font Awesome for icons (optional but nice) -->
+  <title>Kards 卡组图鉴 · 文件数据</title>
+  <!-- Font Awesome (optional) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * {
@@ -28,7 +28,6 @@
       width: 100%;
     }
 
-    /* 头部 */
     .header {
       display: flex;
       flex-wrap: wrap;
@@ -136,9 +135,8 @@
       margin-top: 0.5rem;
     }
 
-    /* 卡片样式 */
+    /* 卡片样式 —— 预备/现役 深色/浅色区分 */
     .deck-card {
-      background: white;
       border-radius: 20px;
       padding: 1.5rem 1.2rem 1.2rem;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02), 0 1px 3px rgba(0,0,0,0.04);
@@ -151,12 +149,74 @@
       background: #ffffff;
     }
 
-    .deck-card:hover {
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0,0,0,0.02);
+    /* 现役卡片：浅色清爽 */
+    .deck-card.active {
+      background: #ffffff;
       border-color: #e2e8f0;
     }
 
-    /* 顶部：卡组名称 + 预备徽标 */
+    /* 预备卡片：深色背景 */
+    .deck-card.reserve {
+      background: #1e293b;
+      border-color: #334155;
+      color: #e2e8f0;
+    }
+
+    .deck-card.reserve .deck-name {
+      color: #f1f5f9;
+    }
+
+    .deck-card.reserve .deck-code {
+      background: #2d3a4f;
+      border-color: #3b4a63;
+      color: #d1d9e6;
+    }
+
+    .deck-card.reserve .deck-note {
+      color: #cbd5e1;
+    }
+
+    .deck-card.reserve .deck-provider {
+      border-top-color: #334155;
+      color: #94a3b8;
+    }
+
+    .deck-card.reserve .provider-name {
+      color: #e2e8f0;
+    }
+
+    .deck-card.reserve .type-tag {
+      background: #3b4a63;
+      color: #d1d9e6;
+      border-color: #4b5a73;
+    }
+
+    .deck-card.reserve .deck-status {
+      background: #3b4a63;
+      color: #d1d9e6;
+    }
+
+    .deck-card.reserve .card-footer {
+      color: #64748b;
+    }
+
+    .deck-card.reserve .reserve-badge {
+      background: #2d3a4f;
+      color: #cbd5e1;
+    }
+
+    .deck-card.reserve .reserve-badge img {
+      filter: brightness(0.9) invert(0.1);
+    }
+
+    .deck-card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0,0,0,0.02);
+    }
+
+    .deck-card.reserve:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0,0,0,0.1);
+    }
+
     .card-header {
       display: flex;
       align-items: flex-start;
@@ -172,11 +232,6 @@
       color: #0f172a;
       word-break: break-word;
       padding-right: 4px;
-    }
-
-    .deck-name .star {
-      color: #f59e0b;
-      margin-right: 4px;
     }
 
     .reserve-badge {
@@ -201,7 +256,6 @@
       display: block;
     }
 
-    /* 状态标签（现役/预备）颜色区分 */
     .deck-status {
       display: inline-block;
       font-size: 0.7rem;
@@ -215,11 +269,10 @@
     }
 
     .deck-status.reserve {
-      background: #f1f3f5;
-      color: #5e6a7a;
+      background: #3b4a63;
+      color: #d1d9e6;
     }
 
-    /* 卡组代码 */
     .deck-code {
       background: #f8fafc;
       border-radius: 14px;
@@ -291,7 +344,6 @@
       color: #94a3b8;
     }
 
-    /* 无数据 */
     .no-data {
       text-align: center;
       padding: 4rem 1rem;
@@ -301,14 +353,12 @@
       border: 1px dashed #dce1e9;
     }
 
-    /* 加载 */
     .loading {
       text-align: center;
       padding: 4rem 0;
       color: #94a3b8;
     }
 
-    /* 响应式 */
     @media (max-width: 600px) {
       .header h1 { font-size: 1.4rem; }
       .card-grid { grid-template-columns: 1fr; }
@@ -323,7 +373,7 @@
     <h1>
       <i class="fas fa-layer-group" style="color: #3b82f6; font-size: 1.6rem;"></i> 
       Kards 卡组图鉴
-      <small>· 预备/现役</small>
+      <small>· 文件数据</small>
     </h1>
     <div class="status-badge">
       <i class="fas fa-database"></i> 
@@ -331,7 +381,6 @@
     </div>
   </div>
 
-  <!-- 分页 -->
   <div class="pagination-bar">
     <div class="page-info" id="pageInfo">第 1 / 1 页</div>
     <div class="pagination-btn-group" id="paginationButtons">
@@ -340,7 +389,6 @@
     </div>
   </div>
 
-  <!-- 卡片网格 -->
   <div id="cardGrid" class="card-grid">
     <div class="loading"><i class="fas fa-spinner fa-pulse"></i> 加载卡组数据…</div>
   </div>
@@ -348,11 +396,127 @@
 
 <script>
   (function() {
-    // 配置 —— 腾讯文档 API (方案二：逆向接口)
-    const DOC_ID = 'DR05HV1hVTXFBdmRX';        // 从链接提取
-    const TAB_ID = 'BB08J2';                   // 工作表ID
+    // ---------- 直接使用文件中的数据 (从 data.xlsx 提取) ----------
+    const rawData = [
+      { A: "德美大跳*", B: "%%15|2L2Q2Z343d3k3O3Y4f4zeYgUianDnsoKqfqltgu0xrz6;mInwofoPvh;j1;bK", C: "慢速", D: "纯粹的数值，最强的慢速，遇到快攻基本可以投了喵。", E: "morning" },
+      { A: "英美跳邦*", B: "%%25|0B0m0w0z19gvjelrooqYsQsTw7yJ;080j0s1Vj1mImUofsRw2wb;bK;", C: "慢速 抬血", D: "这套并不依赖英联邦的直伤，卡组中的单位也能对敌方造成威胁", E: "morning" },
+      { A: "苏美空军*", B: "%%45|7SfxiPmto5papkppvewqxn;7I97bqonsHtlv7vfxm;7Hvd;9i", C: "偏快 贴膜", D: "通过自残飞机可以2回合拉出大雅克，但是卡组过牌较少，容易断水", E: "别-4" },
+      { A: "苏德极限快*", B: "%%41|2Z;7HfRtl;2S324piX;7L8N9mjtt9", C: "快攻", D: "进攻性极高，但是特别害怕抗快，过牌能力差", E: "极限快吴迪" },
+      { A: "日美剃头*", B: "%%35|5C5F5R5x636Z7b7xbPimlfnPp4rkvn;5z7sj1jOohp1p9tGx3;bKgL;", C: "中速 otk", D: "爆发偏高，不过过牌区，该卡组携带了八纮一宇过牌", E: "morning" },
+      { A: "美英三巨头", B: "%%52|bEsDtYv6vYw8;blbqohqYu8vR;sGsHu6;pUsUvS", C: "快速 中速", D: "铺场后使用群体贴膜，带来极高收益和优势，但是害怕丢线，抗快偏弱", E: "杨华童学" },
+      { A: "美苏茄子*", B: "%%54|bCbpcPfGpDsHtY;85ofr0r6u4;7EbPggj1u3vP;bK", C: "OTK", D: "爆发超高，需要一定手法（普遍为13k启动）", E: "morning" },
+      { A: "日美新式战法*", B: "%%35|5R5z646y7b7xiop9;6A6H70nIqCx0x1x3;5Z6xgLjkoh;", C: "OTK", D: "可使用疾风打出OTK效果，爆发极高", E: "极限快吴迪" },
+      { A: "日德直伤*", B: "%%31|5C5xm6;2Z3f70eWtOvl;2O5Pq8uE;5R62mb", C: "中速 直伤", D: "中速直伤卡组，输出稳定，但是过牌比较差，害怕回血", E: "女仆" },
+      { A: "日德闪海*", B: "%%31|5C6B6y6z7xfRhHm6rk;3Q5X6ElknIp4x1;4p6x7e7l;5Z", C: "快攻", D: "高质量快攻，比一般快攻都可怕", E: "女仆" },
+      { A: "日法爆牌*", B: "%%36|2h5C5G5U5W5x637b7ximlfmfnPnQp2p9qt;2B2l5E5OfcgJjOp4qz;;oG", C: "慢速", D: "荣耀与忠诚死了后对卡组有打击，但是本身作为老卡组，还是有强度的", E: "女仆" },
+      { A: "苏美人海", B: "%%45|8Cxk;7KbNbqiRvUxAyDyV;9Az0zC;7F84o1", C: "中速 偏快", D: "现版本较弱，轻步兵贴膜铺场，必须抢到前线，怕群解，", E: "兑 一只K佬" },
+      { A: "德法灵车*", B: "%%16|2S303WoOwC;2Z3X4vfOgJwE;323f4AlOoUq8;ux", C: "快速 otk", D: "前四为核心，依靠0k的单位与指令打出爆发伤害的伪otk", E: "morning" },
+      { A: "日美试飞*", B: "%%35|5C5D5x6B747b7xbGimnPrkx3;gKgLnI;78p3tK;6D6PbV", C: "快攻", D: "靠弃牌来补牌，作为偏快攻也是快攻噩梦", E: "女仆" },
+      { A: "日意控制*", B: "%%37|5C5F5M5x5z636B7xhGimjjlfmanPoYqDqtrkx0x9;66jMjOmTqCtFtKx3;7e;", C: "慢速 控制", D: "日本玩家的信仰卡组，慢速杀手，同时也兼具一定的抗快能力", E: "女仆" },
+      { A: "德日变速*", B: "%%13|2L3N3O3Y5zgUiajLnwq9u0wJx3xr;3f3Q4e4pjijOnIoPqCvhwK;6x;", C: "变速 偏快", D: "前期快攻，中期质量，后期飞机", E: "morning" },
+      { A: "日德烟幕*", B: "%%31|2Z4u5C5x6B7xhHlfqArk;3ffbi9ipnIqr;5Ziiqx;4vqv", C: "快攻", D: "卡兹贴膜祖师爷，比较吃运气", E: "女仆" },
+      { A: "英德断水*", B: "%%21|0B0m0w4seFgvjelrnwo8ooouq0qYsQu1vhw2w7yJyO;0l2NhDkAmUoPoxoXtU;;", C: "控制", D: "娱乐卡组", E: "morning" },
+      { A: "日法古老帝国*", B: "%%36|5C5M5V6y7bp4rk;k7manIrRvc;6xjS;5v5Z7frV", C: "快攻", D: "靠古老帝国稳定控制血量，触发旭兵团加成，手搓大哥", E: "女仆" },
+      { A: "英芬小车*", B: "%%29|0l0m191xgvoorKw7wayE;nlpUqYw0;jdtTwb;091npZ", C: "中速 慢速", D: "让小车喝茶，开洛塔和横扫千军打出高额爆发", E: "‘’速切玩家‘’" },
+      { A: "美法跳费*", B: "%%56|bCbEbmcPcZDBDCfGh9jvpDpzr3r8syv6vXvYyv;2lczgJof;2ibKbPj1;", C: "慢速", D: "美跳虽区，不过实战还是很不错的", E: "morning" },
+      { A: "日美亡记*", B: "%%35|5C5F636y7b7d7s7xfYfZimjjjQlfmamcnPqtrkx3zn;5BbKj1jOm8memIp9x2;;", C: "慢速", D: "比英联邦爆发高，但是比美跳还区", E: "女仆" },
+      { A: "日澳天气", B: "%%3a|5C5F5x636BhHjjp9qtrkx9ycznzv;7eqCqDx3xY;matKy7y9yd;", C: "中速 控制", D: "天气控场，肘击快攻，飞燕剃头，吴迪", E: "蒙帝" },
+      { A: "苏日控制", B: "%%43|8C8e91jWmtpkppqLqTrjt3vewqwXwyyXzC;7S8UqDvfwwwx;thtK;ma", C: "慢速 控制", D: "通过前期的解牌和守护，过渡到后期，用方面军的无尽资源取胜", E: "别-4" },
+      { A: "苏美杠二工厂*", B: "%%45|iW;8cbGpju4;88g5jVmDmEo4;7HbKmo", C: "娱乐", D: "通过前期的解牌和跳费，用全民参战拉出866复制，利用866的玩具刷杠二", E: "。" },
+      { A: "日波炸槽*", B: "%%38|5B5C5V6w6xm6petCzq;5ZlktFztzw;p1p6zpzs;pczi", C: "快攻", D: "无敌炸槽会变成千年一梦吗？", E: "女仆" },
+      { A: "苏美人海*", B: "%%45|8f8jbQfxnWo0o5xkyD;bsxAz0;9AbNyVzC;7F84o1", C: "中速 偏快", D: "吃贴膜上手率，爆发很高，群解批发的环境下已经很牢了", E: "P1Y1 银河一一型" },
+      { A: "英日速邦*", B: "%%23|0B0m0z191TgvjAlrsT;0a0nih;081V5R78;0dp3tT", C: "速邦", D: "比跳邦更低的造价，比跳邦更快的爆发", E: "不懂人心亚瑟王jpg." },
+      { A: "德法断爆*", B: "%%16|2h2L2Q343m4zeZgUtgu0;2l3i3jgJvh;2n3hfUoXtd;oG", C: "娱乐 中速 慢速", D: "敌人断水则继续断，敌人爆牌则继续爆，纯为报复社会的卡组，不为输赢", E: "私禾之源" },
+      { A: "美法前线*", B: "%%56|bEbQcVDBv6vc;bqgJlgo6rcxAxc;xj;dldvrVvS", C: "快攻", D: "恶俗卡组，预备毒瘤，美国快攻排面", E: "女仆" },
+      { A: "苏美自残*", B: "%%45|828C8gg6pDppqTz0;mFnU;o6;7H8I9ngbiQmo", C: "中速 偏快", D: "血与铁时期的毒瘤轮椅在预备依旧发光发热", E: "。" },
+      { A: "日德快攻", B: "%%31|2S5C6B6y7ahHm6qDrktCvhx0zq;7qlkqCtGx3;4p6x7e7l;5Z", C: "快攻", D: "永不落幕的传卡组", E: "别-4" },
+      { A: "英德一攻*", B: "%%21|080m2ZgvlDpOpPyJ;0s1O1WjClyouoxuxw8;tcwbxo;yH", C: "中速 偏快", D: "大狗粪，不要浪费万能卡去合，纯娱乐", E: "不会起名" },
+      { A: "英法大盗*", B: "%%26|0B0m0w0z191xgFgvjejzkplrn4ooq0sQsTw7;0q0s2liqjTmUouoxqY;2n;", C: "娱乐 中速 慢速", D: "独角大盗~~娱乐卡组", E: "古德里安" },
+      { A: "美法前线", B: "%%56|bBbEcrcTfLjylIrcrSvcvWxjyS;bIbqcVd6lgsG;dvvS;d4rV", C: "中速 快速", D: "比较正常的一套美前，能创飞跳费。巴顿没有不用合", E: "区中之王" },
+      { A: "日德断控*", B: "%%31|2P5F5U5x636B7b7dlfmcnPrkx9zn;3h3j6N6W7e7sfTjOoPoXx3;ma;", C: "慢速", D: "随着镰刀的削弱，日德已经一去不复返了", E: "女仆" },
+      { A: "英日直伤", B: "%%13|2Q3i3X4su0vh;3ffUq9tFwB;3hq8tHtqwW;tuuz", C: "快攻", D: "新版本特化过后的直伤快攻，有效克制英澳流星和日法塞诗", E: "别-4" },
+      { A: "日波炸槽", B: "%%38|5Cp2;5B6wp4petFzw;5Zp1p6zizpzszt;pc", C: "快速", D: "炸槽无敌，现役轮椅之一", E: "天空" },
+      { A: "日美无牌*", B: "%%35|5U7ap4rktCtOx1;7lbqbVohvS;hIjR;5QbOjNqp", C: "快攻", D: "已经成为了预备弃子了", E: "女仆" },
+      { A: "苏美牛头人*", B: "%%45|828C8e8T8Y91fxiPjsjWlmppqTrjt3vewq;bPiTj1vfwwwx;8rbK;89", C: "控制 慢速", D: "师夷长技以制夷，控制对面单位，让对面变成无能的丈夫", E: "别-4" },
+      { A: "英美喷火*", B: "%%25|0B0jfAgPhLj1lrlw;0cbPgzmS;bKgChFhQiI;1L1M", C: "慢速", D: "经典老卡组，通过地勤团给喷火提供大量加成，打出成吨伤害", E: "大概" },
+      { A: "德州超人*", B: "%%52|bEbmbTcOcqDCdkfGjvmCpyqYtYv6;czj1mIofpDtV;bPj5mU;bK", C: "慢速", D: "跳，越跳越高，99-99直接吓死对面", E: "兑，一只K佬" },
+      { A: "德日海军", B: "%%13|2Q3i3X4su0vh;3ffUq9tFwB;3hq8tHtqwW;tuuz", C: "中速", D: "时代的眼泪，用日本和德国大量海军牌打出成吨直伤", E: "不懂人心亚瑟王jpg." },
+      { A: "英澳直伤", B: "%%31|2S5C6B6y7ahHm6qDrktCvhx0zq;7qlkqCtGx3;4p6x7e7l;5Z", C: "中速", D: "标准直伤卡组，用英国强力直伤和澳新解牌配合，控场打直伤", E: "天空" },
+      { A: "英波流亡*", B: "%%28|0B0mgPmkoosQv8w7;08iFirjCnTw8wc;iBvawb;2Fjq", C: "中速", D: "流亡单位之间的相互配合提供了大量贴膜，也是一个很老的卡组", E: "大概" },
+      { A: "日波军团*", B: "%%38|5C6BqDqqrktCuyx3x7znzq;7eiDmaphtFtKtyzizs;tGzm;pg", C: "变速", D: "将情报转化为贴膜，使军团快速成长", E: "女仆" },
+      { A: "苏法爆牌*", B: "%%46|7Z8C8Y919bgeiPjWlmmto0o5ppqLqTrjthwowqwy;gJiTxm;8rgQnr;oG", C: "慢速 控制", D: "个人感觉效果差，对面进攻性但凡强点就顶不住，也算时代的眼泪", E: "别-4" },
+      { A: "日德快攻*", B: "%%31|646yqB;5Z6073iklRqy;656F6x7g7l7pfPm5;", C: "快攻", D: "最古早时期的日快，现在完全没有强度，在此留作收藏", E: "女仆" },
+      { A: "德芬谜语人*", B: "%%19|2N31354MjgoO;2U363deWeZfTkAno;f4fUnm;oDoQ", C: "变速 偏慢", D: "偏娱乐，通过大量出其不意的反伤反制取胜，造价低新手也可玩", E: "不懂人心亚瑟王jpg." },
+      { A: "日法抵抗", B: "%%36|5C6Bg3hHjjrkrTtCwXx9znzqzv;2h2lqDtFzmzs;7etK;2p7a", C: "中速", D: "版本偷分卡组，很强势", E: "女仆" },
+      { A: "美意馒头*", B: "%%57|bEcOfGk5ohtYv6vYyv;d4fAj1jMlgr9rb;bKqWr4rY;rc", C: "中速 偏慢", D: "靠反复大量强力部署效果创造优势局面和强力单位", E: "别-4" },
+      { A: "英日小飞机", B: "%%23|080h0m7cgvoopOq0qCsRv9w7yPzo;1aowtK;071O1o5twb;qp", C: "变速", D: "也是偷分卡组，克制炸槽日法，特别建议尝试一下", E: "女仆" },
+      { A: "苏日岚兵团", B: "<br>%%43|6Z797d7E7N7O8286888e8g8P9aqDqLrhvewy;667Sk0th;7H7sqy;89", C: "中速", D: "玩法：不断过牌，把杉兵团和铜飞燕拉去乌拉尔工厂改造，拉出的岚兵团可以在本回合行动创爆总部", E: "区王" },
+      { A: "日苏隐蔽*", B: "%%34|5C5x6B7xhHlfnPrkvf;5Z6x7eaXnIp4puqCqD;p8pnpvtK;", C: "快攻", D: "猜猜蔽", E: "女仆" },
+      { A: "日苏亡记*", B: "%%34|5C5x636yfZjQlfrkzq;72mep7p9tFthwox0x2x3x4xm;5Bmo;", C: "变速", D: "由群u狂三研发的强力卡组，具有很不错的爆伤本来", E: "鸭式" },
+      { A: "日法洗切", B: "%%36|5C5x666B6C6yhHm6rksZtCwXx3x5;7eqDrVt1tFtJtK;6x;5ZtQ", C: "快速", D: "实力还在，仍有一战之力", E: "大概" },
+      { A: "德法断爆*", B: "%%16|2h2L2Q343m4zeZgUtgu0;2l3i3jgJvh;2n3hfUoXtd;oG<br>", C: "娱乐 中速 慢速", D: "敌人断水则断，爆牌则爆牌，诸多卡牌<br>社会的卡组", E: "私禾之源" },
+      { A: "英美跳枪*", B: "%%25|060j0m1meGgvjelroopSw5;0o0qbKbPggj1ousCwb;1kov;09", C: "中速 慢速", D: "传奇耐削王，预备还是很好玩的，想要爆发可以多带一张十字军，作者觉得可以尝试优化变成英联邦手枪双轴", E: "high" },
+      { A: "英日大手枪*", B: "%%23|0m0o1B1mpMw5;0s5Rou;hM;09jAp3sCtTwc", C: "娱乐 OTK", D: "预备（可以把十字军带两张，看个人喜好）", E: "天童アリス（mKPz M47 G）" },
+      { A: "日芬收缴*", B: "%%39|5C5x636B7b7xhHjjlfnPqtrkzn;nanfnHninInjnnoF;7enM;nO", C: "质量 中速 变速", D: "这套是很贵的预备原教旨主义日芬收缴，但真的很好玩，可以考虑优化竭尽全力这些多带强制冻结或者金属废料，如果怕没有抑制可以带白死", E: "high" },
+      { A: "日芬冲击", B: "%%39|5C5x666Bflngp4qArktCtGvnwewfwgwXx3xi;6xnloDq3qDqr;5Z7lqC;", C: "快速", D: "这套也算是神人卡组了 冲击流个人感觉是套挺好的体系 但是这套没什么补强 所以比较弱", E: "战意电竞卤鸭" },
+      { A: "日芬收缴混冲击*", B: "%%39|5C5x5Z6B7b7c7xfljOlfmamcn6nfngninmnnnPoDoFp4p9qAqCqDrkrPx3;nanHnI;;nO", C: "中速", D: "这套属于收缴轴为主 冲击轴辅助 抗快比较强而且确实好玩 可以考虑优化五式战 因为笨重 多带一张白色死神", E: "战意电竞卤鸭" },
+      { A: "英法动员*", B: "%%26|0m0w0zgJgvlrooqYsQsTw7;0l2wgpjF;101VgIwb;gHhS", C: "中速", D: "前期动员单位上压力，后期英联邦斩杀", E: "兑，一只K佬" },
+      { A: "英德协力", B: "%%21|0mgvoopOw1w7xB;0dqYw0wawcwHwJxe;w9wbxfxq;w6", C: "中速", D: "前期小单位抢血，中期协力枪打伤害，德国回手兵刷英王枪部署，用野马或瓦伦丁斩杀", E: "兑，一只K佬" },
+      { A: "英意小飞机*", B: "%%27|0c0m0wgFmTsRw7;0A1ogwowv9;1Owb;075iops5", C: "中速 偏快", D: "预备，先手可以恶搞日快", E: "兑，一只K佬" },
+      { A: "英意罗马超人*", B: "%%27|0m0s0w0z19gvlrm0mTooqnsQv8yJ;0l5afXjMsRyO;1Vlewb;mU", C: "控制 慢速", D: "预备，造价比较高", E: "鸭式" },
+      { A: "德苏钳击*", B: "%%14|2L2Z3O3YgUlLq9u0;gTjilSoP;8bfSftlZnt;fOmx", C: "中速", D: "劳卡组，强度有待提高", E: "morning" },
+      { A: "苏美T-34*", B: "%%45|868C8i9siPiSjsjWnVo5ppqTrjyX;9rbPczfAggiLiZqIqS;bK;ri", C: "中速", D: "牢，每个人的理解可能不同，主要思路是闪击坦克加转折点打爆发", E: "兑，一只K佬" },
+      { A: "英意构筑外", B: "%%27|0F0m1dmToosQv8yJ;040ljMqoqYsRwawbwSwUyFyLyOyP;wT;", C: "娱乐 慢速", D: "造价很高，新版本卡组", E: "鸭式" },
+      { A: "苏意控制*", B: "%%47|7Z8C8Y9bfrfVfxh3iPjWlmo0o5pkppqLqTrjt3vewqyX;85jMmTonoYthvf;fX;", C: "慢速", D: "预备，造价极高，空轴，控制卡组最高的山", E: "兑，一只K佬" },
+      { A: "德意控制*", B: "%%17|2L2Q2Z343b3d3n3Y4z57eYfVgUiaicm0nDoTtgu0vgwJz6;fXjMmTnwoPoYq9vh;;", C: "控制", D: "德意控算是为数不多德国好控制卡组了，不过强度不在线，希望能加强吧。", E: "morning" },
+      { A: "苏德双核钳击*", B: "%%14|2L2Q4zgUu0;fSftq8tato;;fOgTlZmxnttl", C: "娱乐 中速", D: "如你所见，这套卡组不仅有91团，还有大奋炮", E: "鸭式" },
+      { A: "苏美金卡苏*", B: "%%45|818C8g8i8O8Y919bfrg6iPiSiWjWo0o5pkppqLqTrjtmvewqyX;j1of;g8mI;bK", C: "慢速", D: "造价最贵的慢速之一，可强度并不像他的造价那么强", E: "morning" },
+      { A: "苏美科学家*", B: "%%45|7Z818C8O8T8Y919bbPg6iPiWjWlmo0o5pkppqLqTrjtmvewqyX;bKggmIof;g8j1;", C: "慢速", D: "贵死，任何卡组都能五五开只能说强度尚可", E: "high" },
+      { A: "英法爆牌*", B: "%%26|0m0n0wgQgvhDlroooqpOrQsQsTtUtXyJ;2l2ngJjzmUouoxsV;kp;oG", C: "娱乐 慢速", D: "爆牌的设计过于反设定，拖疲劳的玩法注定了他的不受欢迎程度。", E: "morning" },
+      { A: "美德馒头", B: "%%51|bEfGpDqjsyv6vTvXvY;bPofoPq7r9vW;k5r4;d4ggrc", C: "慢速", D: "大部分都是现役组件，造价比较便宜", E: "鸭式" },
+      { A: "英波四核情报*", B: "%%28|0m0w19hEoophyEyJ;0l0siDjfjnjUorzi;pi;oxtTyH", C: "中速 预备", D: "你游核心数量最多的卡组，也是最牛子逼的情报卡组，造价较便宜，可以拷打老逼。而且还是我自研的。", E: "鸭式" },
+      { A: "美英惩戒*", B: "%%52|0jbCbEbicZfGhDjvjzkpmKmPpLpyv6vUvXw2;ofpD;bPj1pJ;bKmU", C: "慢速", D: "没展开很区，慢速内战展开了还是不弱的，资源很足", E: "high" },
+      { A: "德意山地*", B: "%%17|2L2Q2T2Y2Z3N3O3Y565neYi5lenEoSqau0;37jinAny;5etr;5hnx", C: "中速", D: "铺场卡组，比较牢", E: "兑，一只K佬" },
+      { A: "苏法控制*", B: "%%46|7Z8C8g8Y9bhaiPiTiWjWlmo5pkqFqLqTrTt3tmvewxyX;2l2nrQthvfwwxm;2i;", C: "中速 慢速", D: "金卡较多，强度较高，吴迪回血", E: "終焉の旅" },
+      { A: "英日协力", B: "%%23|060B0moosQtGtUw1w5w7wVwXx3x5xBxf;p4qYw0w2wax2xe;w9wbwc;", C: "中速", D: "协力之间的配合，害怕被解场反复吃协力", E: "女仆" },
+      { A: "英澳流星", B: "%%2a|0B0d0mgvooq0sQsTw2yJ;0leFqYsRw8y4y9yc;wby7yd;yH", C: "控制", D: "现役轮椅", E: "morning" },
+      { A: "德芬车", B: "%%19|303NgSttwCxr;2S2Z3f3X4vgVrK;2V4AnloUza;ux", C: "快攻 OTK", D: "现役德国最强的卡组，前家可以让卡组中的小车变成0费，洛塔减油后的小车可以让333快速变大哥", E: "兑，一只K佬" },
+      { A: "英美炸鸡*", B: "%%25|0m0w1N1x1ygvlrn4oopOw7yF;0jmXofsRw8;j1mImU;ggyP", C: "慢速", D: "德美杀手。", E: "morning" },
+      { A: "苏日别4*", B: "%%43|85jWm4mwx8;5R7Umath;5W7E7Wg5o2p1;7Hu4", C: "慢速", D: "通过监视复制别4，再给其中一张贴上背水一战达到无限回手部署0费别4，再通过金泽（可通过两张别4减为1费）直伤敌方总部。卡组中有很多拖延时间的牌，足够你撑到第8回合启动（防反制也可以到第9回合先使用帝国之力）。", E: "114514" },
+      { A: "苏美隐蔽*", B: "%%45|888Y91fxiSjWmto5pkpmppwq;7So6papHpu;pFpvth;pnpt", C: "中速", D: "小炮看见笑出声了，秘密行动时期的老卡组，实战慢速克星", E: "别-4" },
+      { A: "美德前线", B: "%%51|bRcrDBfLj8jyu8vTvYxA;3QcVqZvW;4pd6xc;d4vSxq", C: "快速", D: "预备完没钱什么德行，？", E: "鸭式" },
+      { A: "苏美小炮*", B: "%%45|8ebppp;8jbGbqcsdlvf;8099g5rc;8b8M9e", C: "中速", D: "老卡组了，靠小炮配合指令打出成吨伤害，强度还可以", E: "别-4" },
+      { A: "德澳走路流", B: "%%1a|2Q2Z343N3X4zeYgUi8iajKq9tgtou0wBz6z9;3fvhy7zd;xXydza;y9", C: "中速 慢速", D: "张雪峰老师，我还记得你～～", E: "兑，一只K佬" },
+      { A: "美苏水牛", B: "%%54|bEfGfLtlu8v7vfvYyv;7Hbqohsvt9u6vR;blsHsIst;sG", C: "快速", D: "海战老卡组了 随着霍尔姆被削没多少强度了已经 但是娱乐还是挺好玩的", E: "战意电竞卤鸭" },
+      { A: "英苏心火*", B: "%%24|0G0mgvldoopOrdsQv9w7;080p1H7Sn2ottV;8Vk0lqmUwc;", C: "中速", D: "卡兹牢九门之一，快攻的噩梦", E: "别-4" },
+      { A: "德美蝮蛇*", B: "%%15|2Z3d3N454zeYiaqltgu0xrz6;3X4smRvhwB;bPoeq8;3cbK", C: "慢速 OTK", D: "很牢的卡组，至少要12费，还得分回合才能启动", E: "别-4" },
+      { A: "美苏馒头*", B: "%%54|7H7SbEbPd3d4fGk5mCo6odpDqGr8rgtlv7vXvYyv;j1r9rbrcth;bKqWr4;", C: "中速 偏慢", D: "娱乐卡组 但是还是有点强度的 解牌塞的有点多 所以说过牌就少了点 其实馒头完全可以盟意大利但是上传的老傻子没卡合。", E: "战意电竞卤鸭" },
+      { A: "德日蓝色方案*", B: "%%13|2ZoSqawC;3a5BoOpcpe;p1p6q8;32q7uxxq", C: "OTK 中速", D: "一回合打空卡组，但是很吃运", E: "别-4" },
+      { A: "苏法非法人海*", B: "%%46|7K7Y91pl;2EnWyV;9AiRzC;2D7F84lFo1", C: "娱乐 中速", D: "和一位，？", E: "鸭式" },
+      { A: "苏英词条", B: "%%42|8CjWpkppqTt3vewqyXz2z5;7SqYsRthvfw8wmwowwwxz0;1Hwt;", C: "娱乐 中速 慢速", D: "538和西肯特可以给守护贴闪击，凑成双词条可以吃铜KV加成", E: "兑，一只K佬" },
+      { A: "英苏推进*", B: "%%24|0m0n0w0z1m1VgFgvlrsT;0d0s85o3w8;wb;0oiQlqwo", C: "慢速 OTK", D: "一套比较稳定的卡组，可以打经典赛", E: "别-4" },
+      { A: "英波控顶", B: "%%28|0m19eFgvoophsQv8yJ;060lqYs0sRtWtyzi;tTu2;0gsO", C: "慢速", D: "被快攻，中速打成大狗粪，比较昂贵，对抗慢速非常有优势，。", E: "鸭式" },
+      { A: "苏英词条plus*", B: "%%42|8e8YjWo0pkppqTqYt3tVvewqz2z5;7Sn2thvfw8wowwwx;1Hlqwt;", C: "中速 慢速", D: "带上了咬牙和深沟，进一步增加了过牌和爆发，机动防御理论上一个坦克可以打22点伤害", E: "兑，一只K佬" },
+      { A: "日英协力枪*", B: "%%32|wZ;6CjPtF;6x7e7lw9;5Z7ap3qvxe", C: "娱乐 快攻", D: "这才是真正的大狗分，千万不要拿金银去合", E: "鸭式" },
+      { A: "英日压制*", B: "%%23|0m0w0z1lgvlrnQv8yJ;0s1a1V5W6N7ejOpQpWwbwW;;0omU", C: "慢速", D: "点击输入文字 木昆木 请输入文本", E: "鸭式" },
+      { A: "德美钳击*", B: "%%15|2Q2Z3n3NeYodtgtovh;bPj1lLmIoPq9;fOwB;bKlZnt", C: "偏慢 OTK", D: "前期爽跳，跳起来之后用大奋炮开困兽无限资源来OTK", E: "Freya Yehan" },
+      { A: "德英钳击*", B: "%%12|0E0k2Z3b3f3neYjCkplKoXqYvhw2;jimUoPq9wI;wB;08lZnt", C: "慢速", D: "过牌扛快都行，后期主靠大芬炮输出。纯娱乐，比较招笑", E: "Freya Yehan" },
+      { A: "日芬紫电*", B: "%%39|5B5C5N5R667biflfngnPp2;5ZnIpezw;78p1p3p6;ninO", C: "偏慢 OTK", D: "纯粹的娱乐卡组，可以携带摩托艇解单位，警慎合成", E: "六万五" },
+      { A: "德日变速*", B: "%%13|2L2Z3N3O3Q3Y4e5z6xgUianOq9qDu0;3f4pjijLjOnInwoPtKtsvhzs;;", C: "", D: "", E: "" },
+      { A: "德法龙阿姨*", B: "%%16|3N3O3Y4egJgUiaq9u0;3f3QhajijLnwoPrSvhxq;4pqb;rV", C: "", D: "", E: "" },
+      { A: "美法高油*", B: "%%56|bCbEcZdkfGgJh9jvmCmKoaocsyv6yv;2i2lbPj1ofq6qWr6rT;bKo7;", C: "慢速", D: "牛逼。", E: "year。" },
+      { A: "苏美T34*", B: "%%45|868C8i8O8Y9b9n9p9r9sh5iPjsjWnVpkppqLqSqTrjt3tmvewq;bPiLqI;;bKri", C: "偏慢", D: "用美国跳费尽早开出T34,再用卡配合t34 ，有点牢", E: "大概" },
+      { A: "美法直伤*", B: "%%56|bCbEcZdkfGjvmCmKv6yv;2i2l2nbKbPgJmIof;2xj1u3;gg", C: "慢速 OTK", D: "", E: "YEAR。" },
+      { A: "变速扩剃*", B: "%%35|5C5x666B6Z7b7nbPbqhHlfp4qWrktCtFvn;5Z5zgLjOnIohqCx3;7ebK;", C: "中速 偏快", D: "区别传统剃头，前期小单位磨血，后期飞机斩杀，携带浮桥斩杀更快，更加舒服的构筑", E: "女仆" },
+      { A: "金卡日（日美跳）*", B: "%%35|5C5F5x636B7b7n7ximjjlfmcnPqAqtrktCx3x9zn;j1jOmamIp9;bKp1p6;", C: "慢速", D: "优秀节奏诠释绝对进攻", E: "女仆" },
+      { A: "日英控制*", B: "%%32|1d5C5F5x5z666B7n7xhHjjlfmcnGnHnPpWrkx9znzq;5OhDjOnIqDqYsRw8x3;;", C: "慢速", D: "前期小单位施压，后期飞机斩杀，不缺解之人，但是有些缺过牌", E: "女仆<br>" },
+      { A: "日法爆*", B: "%%36|5C5U5x637b7c7xfcimjjlfnPp4qDqtrktC;2i2l5O5WgJgQm4p6p9;;oG", C: "慢速", D: "天下最恶搞最撕咬最恶心的卡组，爆牌。？兑", E: "year。" },
+      { A: "日英炸槽*", B: "%%32|5C64jAltmap2qDqYrktCwb;03085y78ifp4pezw;0np1p3p6;", C: "娱乐 otk", D: "坐牢坐麻了（山本家里进快攻了山本山本你在哪快上手啊山本😭）", E: "凌江" },
+      { A: "唐诗吴迪德美*", B: "%%15|2L2Q2Z313m3Y4F4rcKlUnDnwoKqfqhu0vh;3j4smIoPoXtv;j1td;bK", C: "中速 慢速", D: "这个德美很唐兑。", E: "凌江" },
+      { A: "德意协同*", B: "%%17|2Z3m3Q3Y4r5seYianwu0wJxr;3f4pi7jJmTnCoPvhwKxo;5k;2V", C: "", D: "", E: "" }
+    ];
 
-    // 分页配置
+    // ---------- 分页配置 ----------
     const PAGE_SIZE = 12;
     let currentPage = 1;
     let allDecks = [];
@@ -364,118 +528,50 @@
     const nextBtn = document.getElementById('nextPage');
     const totalSpan = document.getElementById('totalCount');
 
-    // ---------- 辅助: 解析腾讯文档返回的表格数据 ----------
-    function parseSheetData(rawData) {
-      try {
-        // 根据逆向经验，数据在 clientVars.collab_client_vars.initialAttributedText
-        const clientVars = rawData?.clientVars || {};
-        const collab = clientVars?.collab_client_vars || {};
-        const text = collab?.initialAttributedText || '';
-
-        if (!text) {
-          console.warn('未找到 initialAttributedText');
-          return [];
-        }
-
-        // 解析文本: 类似CSV，但用 \t 和 \n 组织，且可能包含样式标记
-        // 简单处理: 按行拆分，去掉空行，第一行是表头
-        const lines = text.split('\n').filter(line => line.trim() !== '');
-        if (lines.length < 2) return [];
-
-        // 第一行表头，但我们跳过，直接取数据行 (A-E 列)
-        // 每一行以 tab 分隔，但可能包含一些额外的换行或样式，做简单清理
-        const rows = lines.slice(1).map(line => {
-          // 移除可能的 \r
-          let clean = line.replace(/\r/g, '');
-          // 按 \t 分割
-          const cols = clean.split('\t');
-          // 只取前5列，不足补空
-          while (cols.length < 5) cols.push('');
-          return cols.slice(0, 5);
-        }).filter(row => row.some(cell => cell.trim() !== ''));
-
-        // 转成对象数组 { A, B, C, D, E }
-        return rows.map(row => ({
-          A: row[0]?.trim() || '',
-          B: row[1]?.trim() || '',
-          C: row[2]?.trim() || '',
-          D: row[3]?.trim() || '',
-          E: row[4]?.trim() || ''
-        }));
-      } catch (e) {
-        console.error('解析表格失败', e);
-        return [];
-      }
-    }
-
-    // ---------- 获取数据 ----------
-    async function fetchDeckData() {
-      try {
-        const url = `https://docs.qq.com/dop-api/opendoc?tab=${TAB_ID}&id=${DOC_ID}&outformat=1&normal=1`;
-        const response = await fetch(url, {
-          headers: {
-            'Accept': 'application/json, text/plain, */*'
-          }
-        });
-        if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-        const json = await response.json();
-        const rows = parseSheetData(json);
-        return rows;
-      } catch (error) {
-        console.error('获取数据失败:', error);
-        // 如果接口失效，显示错误信息
-        return [];
-      }
-    }
-
-    // ---------- 构建卡片 ----------
+    // ---------- 构建卡片数据 ----------
     function buildDecksFromRows(rows) {
       return rows.map((row, index) => {
-        const name = row.A || '未命名卡组';
+        const nameRaw = row.A || '未命名卡组';
         const code = row.B || '';
         const typeRaw = row.C || '';
         const note = row.D || '';
         const provider = row.E || '匿名';
 
-        // 判断是否预备：名称包含 * 或 （这里根据数据样例，带*为预备）
-        const isReserve = name.includes('*');
-        const displayName = name.replace(/\*/g, '').trim();
+        // 判断是否预备：名称包含 *
+        const isReserve = nameRaw.includes('*');
+        const displayName = nameRaw.replace(/\*/g, '').trim();
 
-        // 卡组类型标签: 按空格分隔，过滤空
+        // 类型标签
         const types = typeRaw.split(/\s+/).filter(t => t.trim() !== '');
 
-        // 构建卡片HTML
         return {
           id: index,
           name: displayName,
-          fullName: name,
+          fullName: nameRaw,
           isReserve,
           code,
           types,
           note: note || '—',
           provider: provider || '匿名',
-          // 用于模板渲染
           render: function() {
-            const statusClass = this.isReserve ? 'reserve' : '';
             const statusText = this.isReserve ? '预备' : '现役';
-            // 预备图标 (显示 reserv.png)
-            const reserveIconHtml = this.isReserve 
-              ? `<span class="reserve-badge"><img src="reserv.png" alt="预备" onerror="this.style.display='none'"> 预备</span>` 
+            const cardClass = this.isReserve ? 'reserve' : 'active';
+
+            // 预备徽章 (显示 reserve.png)
+            const reserveBadgeHtml = this.isReserve
+              ? `<span class="reserve-badge"><img src="reserve.png" alt="预备" onerror="this.style.display='none'"> 预备</span>`
               : '';
 
             const typeTags = this.types.map(t => `<span class="type-tag">${t}</span>`).join('');
 
             return `
-              <div class="deck-card">
+              <div class="deck-card ${cardClass}">
                 <div class="card-header">
-                  <div class="deck-name">
-                    ${this.isReserve ? '<span class="star">⭐</span>' : ''}
-                    ${this.name}
-                  </div>
-                  ${reserveIconHtml}
+                  <div class="deck-name">${this.name}</div>
+                  ${reserveBadgeHtml}
                 </div>
                 <div>
-                  <span class="deck-status ${statusClass}">${statusText}</span>
+                  <span class="deck-status ${this.isReserve ? 'reserve' : ''}">${statusText}</span>
                 </div>
                 <div class="deck-code">${this.code || '—'}</div>
                 <div class="deck-meta">${typeTags}</div>
@@ -498,7 +594,7 @@
     function renderPage(page) {
       const total = allDecks.length;
       if (total === 0) {
-        gridEl.innerHTML = `<div class="no-data"><i class="fas fa-table"></i> 暂无卡组数据，请检查文档链接或网络。</div>`;
+        gridEl.innerHTML = `<div class="no-data"><i class="fas fa-table"></i> 暂无卡组数据。</div>`;
         pageInfo.textContent = `第 0 / 0 页`;
         prevBtn.disabled = true;
         nextBtn.disabled = true;
@@ -514,49 +610,26 @@
       const end = Math.min(start + PAGE_SIZE, total);
       const pageItems = allDecks.slice(start, end);
 
-      // 更新网格
       gridEl.innerHTML = pageItems.map(item => item.render()).join('');
 
-      // 更新分页信息
       pageInfo.textContent = `第 ${safePage} / ${totalPages} 页 (共 ${total} 个卡组)`;
       totalSpan.textContent = `${total} 个卡组`;
 
-      // 按钮状态
       prevBtn.disabled = safePage === 1;
       nextBtn.disabled = safePage === totalPages;
 
-      // 重新绑定按钮事件 (保持干净)
       prevBtn.onclick = () => { if (!prevBtn.disabled) renderPage(currentPage - 1); };
       nextBtn.onclick = () => { if (!nextBtn.disabled) renderPage(currentPage + 1); };
     }
 
     // ---------- 初始化 ----------
-    async function init() {
-      gridEl.innerHTML = `<div class="loading"><i class="fas fa-spinner fa-pulse"></i> 正在从腾讯文档获取数据…</div>`;
-
-      const rows = await fetchDeckData();
-      if (rows.length === 0) {
-        // 如果没数据，尝试展示样例数据 (来源于 data.xlsx 部分)
-        const fallbackRows = [
-          { A: '德美大跳*', B: '%%15|2L2Q2Z343d3k3O3Y4f4zeYgUianDnsoKqfqltgu0xrz6;mInwofoPvh;j1;bK', C: '慢速', D: '纯粹的数值，最强的慢速，遇到快攻基本可以投了喵。', E: 'morning' },
-          { A: '英美跳邦*', B: '%%25|0B0m0w0z19gvjelrooqYsQsTw7yJ;080j0s1Vj1mImUofsRw2wb;bK;', C: '慢速 抬血', D: '这套并不依赖英联邦的直伤，卡组中的单位也能对敌方造成威胁', E: 'morning' },
-          { A: '苏美空军*', B: '%%45|7SfxiPmto5papkppvewqxn;7I97bqonsHtlv7vfxm;7Hvd;9i', C: '偏快 贴膜', D: '通过自残飞机可以2回合拉出大雅克，但是卡组过牌较少，容易断水', E: '别-4' },
-          { A: '苏德极限快*', B: '%%41|2Z;7HfRtl;2S324piX;7L8N9mjtt9', C: '快攻', D: '进攻性极高，但是特别害怕抗快，过牌能力差', E: '极限快吴迪' },
-          { A: '日美剃头*', B: '%%35|5C5F5R5x636Z7b7xbPimlfnPp4rkvn;5z7sj1jOohp1p9tGx3;bKgL;', C: '中速 otk', D: '爆发偏高，不过过牌区，该卡组携带了八纮一宇过牌', E: 'morning' },
-          { A: '美英三巨头', B: '%%52|bEsDtYv6vYw8;blbqohqYu8vR;sGsHu6;pUsUvS', C: '快速 中速', D: '铺场后使用群体贴膜，带来极高收益和优势，但是害怕丢线，抗快偏弱', E: '杨华童学' },
-        ];
-        const fallbackDecks = buildDecksFromRows(fallbackRows);
-        allDecks = fallbackDecks;
-        renderPage(1);
-        return;
-      }
-
-      const decks = buildDecksFromRows(rows);
+    function init() {
+      gridEl.innerHTML = `<div class="loading"><i class="fas fa-spinner fa-pulse"></i> 加载卡组数据…</div>`;
+      const decks = buildDecksFromRows(rawData);
       allDecks = decks;
       renderPage(1);
     }
 
-    // 启动
     init();
   })();
 </script>
