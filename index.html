@@ -87,9 +87,9 @@
     .modal-close { position: absolute; top: 12px; right: 16px; font-size: 1.5rem; color: #94a3b8; cursor: pointer; background: none; border: none; }
 
     .preview-modal .modal-box { max-width: 700px; }
-    .preview-modal .preview-content { max-height: 500px; overflow: auto; background: #f8fafc; border-radius: 12px; padding: 0.5rem; }
-    .preview-modal .preview-content img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
-    .preview-modal .preview-content iframe { width: 100%; height: 450px; border: none; border-radius: 8px; }
+    .preview-modal .preview-content { max-height: 500px; overflow: auto; background: #f8fafc; border-radius: 12px; padding: 0.5rem; display: flex; align-items: center; justify-content: center; }
+    .preview-modal .preview-content img { max-width: 100%; height: auto; display: block; border-radius: 8px; }
+    .preview-modal .preview-content .preview-placeholder { color: #94a3b8; padding: 2rem; text-align: center; }
 
     .no-data { text-align: center; padding: 3rem 1rem; color: #64748b; background: #f8fafc; border-radius: 40px; border: 1px dashed #dce1e9; }
     .loading { text-align: center; padding: 3rem 0; color: #94a3b8; }
@@ -101,7 +101,7 @@
       .filter-group { flex-wrap: wrap; }
       .filter-group input, .filter-group select { min-width: 100px; width: 100%; }
       .modal-box { padding: 1.5rem 1rem; }
-      .preview-modal .preview-content iframe { height: 300px; }
+      .preview-modal .preview-content { max-height: 350px; }
     }
   </style>
 </head>
@@ -164,7 +164,7 @@
   <div class="modal-box">
     <button class="modal-close" id="previewCloseBtn">&times;</button>
     <div id="previewContent" class="preview-content">
-      <div style="text-align:center;padding:2rem;color:#94a3b8;">加载预览中...</div>
+      <div class="preview-placeholder"><i class="fas fa-spinner fa-pulse"></i> 加载预览...</div>
     </div>
     <div class="modal-actions"><button class="btn-secondary" id="previewCloseBtn2">关闭</button></div>
   </div>
@@ -249,7 +249,6 @@
 
         const isReserve = nameRaw.includes('*');
         const displayName = nameRaw.replace(/\*/g, '').trim();
-        // 类型标签：转为小写存储，但显示时保留原始大小写（用原始typeRaw分割）
         const types = typeRaw.split(/\s+/).filter(t => t.trim() !== '');
         const typesLower = types.map(t => t.toLowerCase());
 
@@ -259,8 +258,8 @@
           fullName: nameRaw,
           isReserve,
           code,
-          types: types,          // 用于显示
-          typesLower: typesLower, // 用于筛选（不区分大小写）
+          types: types,
+          typesLower: typesLower,
           note: note || '—',
           provider: provider || '匿名',
           render: function() {
@@ -321,55 +320,50 @@
       });
     };
 
-    // ----- 预览 (API返回HTML) -----
+    // ----- 预览 (从API返回的HTML中提取图片) -----
     window.previewCard = function(code) {
       if (!code) { alert('卡组代码为空'); return; }
       const url = `https://1939.giaory.xyz/?action=overview_horizontal&deck_code=${encodeURIComponent(code)}`;
-      console.log('预览API请求:', url);
       
-      previewContent.innerHTML = '<div style="text-align:center;padding:2rem;color:#94a3b8;"><i class="fas fa-spinner fa-pulse"></i> 加载预览...</div>';
+      previewContent.innerHTML = '<div class="preview-placeholder"><i class="fas fa-spinner fa-pulse"></i> 加载预览...</div>';
       previewModal.style.display = 'flex';
 
       fetch(url)
-        .then(res => {
-          console.log('预览API响应状态:', res.status);
-          return res.text();
-        })
+        .then(res => res.text())
         .then(html => {
-          console.log('预览API返回HTML长度:', html.length);
-          // 尝试提取图片或直接嵌入HTML
-          // 检查是否包含图片
-          const imgMatch = html.match(/<img[^>]+src=["']([^"']+)["']/i);
-          if (imgMatch && imgMatch[1]) {
-            previewContent.innerHTML = `<img src="${imgMatch[1]}" alt="卡组预览" style="max-width:100%;border-radius:8px;">`;
-          } else {
-            // 直接嵌入HTML（可能是完整页面或片段）
-            // 如果包含<html>或<body>，提取内容
-            let content = html;
-            const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-            if (bodyMatch) {
-              content = bodyMatch[1];
+          // 尝试提取图片URL - 查找 img 标签的 src
+          const imgRegex = /<img[^>]+src=["']([^"']+)["']/i;
+          const match = html.match(imgRegex);
+          
+          if (match && match[1]) {
+            let imgUrl = match[1];
+            // 处理相对路径
+            if (imgUrl.startsWith('/')) {
+              imgUrl = 'https://1939.giaory.xyz' + imgUrl;
+            } else if (!imgUrl.startsWith('http')) {
+              imgUrl = 'https://1939.giaory.xyz/' + imgUrl;
             }
-            // 检查是否包含样式或脚本，简单清理
-            previewContent.innerHTML = content;
-            // 如果有图片，确保显示
-            const imgs = previewContent.querySelectorAll('img');
-            imgs.forEach(img => {
-              if (img.src && !img.src.startsWith('http')) {
-                // 相对路径可能无法加载
-              }
-            });
+            previewContent.innerHTML = `<img src="${imgUrl}" alt="卡组预览" onerror="this.style.display='none';this.parentElement.innerHTML='<div class=\\'preview-placeholder\\'><i class=\\'fas fa-exclamation-circle\\'></i> 图片加载失败</div>'">`;
+          } else {
+            // 尝试查找 data:image 或 base64
+            const base64Regex = /data:image\/[^;]+;base64,[^"']+/i;
+            const base64Match = html.match(base64Regex);
+            if (base64Match) {
+              previewContent.innerHTML = `<img src="${base64Match[0]}" alt="卡组预览">`;
+            } else {
+              // 可能是直接返回的图片二进制，尝试作为图片处理
+              previewContent.innerHTML = `<div class="preview-placeholder"><i class="fas fa-exclamation-circle"></i> 未找到预览图片，请检查API返回</div>`;
+            }
           }
         })
         .catch(err => {
-          console.error('预览API请求失败:', err);
-          previewContent.innerHTML = `<div style="text-align:center;padding:2rem;color:#ef4444;">预览加载失败: ${err.message}</div>`;
+          previewContent.innerHTML = `<div class="preview-placeholder"><i class="fas fa-exclamation-circle"></i> 预览加载失败: ${err.message}</div>`;
         });
     };
 
     function closePreview() {
       previewModal.style.display = 'none';
-      previewContent.innerHTML = '<div style="text-align:center;padding:2rem;color:#94a3b8;">加载预览中...</div>';
+      previewContent.innerHTML = '<div class="preview-placeholder"><i class="fas fa-spinner fa-pulse"></i> 加载预览...</div>';
     }
     previewCloseBtn.onclick = closePreview;
     previewCloseBtn2.onclick = closePreview;
@@ -386,7 +380,6 @@
         if (status === 'active' && deck.isReserve) return false;
         if (status === 'reserve' && !deck.isReserve) return false;
         if (selectedTags.length > 0) {
-          // 使用小写比较
           const hasTag = selectedTags.some(tag => deck.typesLower.includes(tag.toLowerCase()));
           if (!hasTag) return false;
         }
@@ -410,7 +403,6 @@
       sortedTags.forEach(t => {
         const opt = document.createElement('option');
         opt.value = t;
-        // 显示时用原始大小写（从types中找）
         const origTag = allDecks.find(d => d.typesLower.includes(t))?.types.find(tt => tt.toLowerCase() === t) || t;
         opt.textContent = origTag;
         if (currentVal.includes(t) || currentVal.includes('all')) opt.selected = true;
