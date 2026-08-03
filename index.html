@@ -87,7 +87,9 @@
     .modal-close { position: absolute; top: 12px; right: 16px; font-size: 1.5rem; color: #94a3b8; cursor: pointer; background: none; border: none; }
 
     .preview-modal .modal-box { max-width: 700px; }
-    .preview-modal img { max-height: 500px; width: 100%; object-fit: contain; border-radius: 12px; background: #f8fafc; }
+    .preview-modal .preview-content { max-height: 500px; overflow: auto; background: #f8fafc; border-radius: 12px; padding: 0.5rem; }
+    .preview-modal .preview-content img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+    .preview-modal .preview-content iframe { width: 100%; height: 450px; border: none; border-radius: 8px; }
 
     .no-data { text-align: center; padding: 3rem 1rem; color: #64748b; background: #f8fafc; border-radius: 40px; border: 1px dashed #dce1e9; }
     .loading { text-align: center; padding: 3rem 0; color: #94a3b8; }
@@ -99,6 +101,7 @@
       .filter-group { flex-wrap: wrap; }
       .filter-group input, .filter-group select { min-width: 100px; width: 100%; }
       .modal-box { padding: 1.5rem 1rem; }
+      .preview-modal .preview-content iframe { height: 300px; }
     }
   </style>
 </head>
@@ -143,14 +146,14 @@
   <div id="cardGrid" class="card-grid"><div class="loading"><i class="fas fa-spinner fa-pulse"></i> 加载卡组数据…</div></div>
 </div>
 
-<!-- 开屏弹窗 (圆角15px) -->
+<!-- 开屏弹窗 -->
 <div class="modal-overlay" id="splashModal">
   <div class="modal-box">
     <img src="https://images.weserv.nl/?url=ssl:www.kards.com/images/card/v52/zh-Hans/uncle_sam.avif&q=100" alt="Uncle Sam" style="border-radius:15px;">
     <h2>你关注百年匠魂了吗？</h2>
     <p>关注「百年匠魂」，品鉴神金研发</p>
     <div class="modal-actions">
-      <button class="btn-primary" id="splashYes">是</button>
+      <button class="btn-primary" id="splashYes">已关注</button>
       <button class="btn-secondary" id="splashNo">还没有</button>
     </div>
   </div>
@@ -160,7 +163,9 @@
 <div class="modal-overlay preview-modal" id="previewModal" style="display:none;">
   <div class="modal-box">
     <button class="modal-close" id="previewCloseBtn">&times;</button>
-    <div id="previewImageContainer"><img id="previewImage" src="" alt="卡组预览"></div>
+    <div id="previewContent" class="preview-content">
+      <div style="text-align:center;padding:2rem;color:#94a3b8;">加载预览中...</div>
+    </div>
     <div class="modal-actions"><button class="btn-secondary" id="previewCloseBtn2">关闭</button></div>
   </div>
 </div>
@@ -189,7 +194,7 @@
     const splashNo = document.getElementById('splashNo');
 
     const previewModal = document.getElementById('previewModal');
-    const previewImage = document.getElementById('previewImage');
+    const previewContent = document.getElementById('previewContent');
     const previewCloseBtn = document.getElementById('previewCloseBtn');
     const previewCloseBtn2 = document.getElementById('previewCloseBtn2');
 
@@ -244,7 +249,9 @@
 
         const isReserve = nameRaw.includes('*');
         const displayName = nameRaw.replace(/\*/g, '').trim();
+        // 类型标签：转为小写存储，但显示时保留原始大小写（用原始typeRaw分割）
         const types = typeRaw.split(/\s+/).filter(t => t.trim() !== '');
+        const typesLower = types.map(t => t.toLowerCase());
 
         return {
           id: index,
@@ -252,7 +259,8 @@
           fullName: nameRaw,
           isReserve,
           code,
-          types,
+          types: types,          // 用于显示
+          typesLower: typesLower, // 用于筛选（不区分大小写）
           note: note || '—',
           provider: provider || '匿名',
           render: function() {
@@ -261,8 +269,6 @@
               ? `<span class="reserve-badge"><img src="reserve.png" alt="预备" onerror="this.style.display='none'"> 预备</span>`
               : '';
             const typeTags = this.types.map(t => `<span class="type-tag">${t}</span>`).join('');
-            const previewUrl = `https://1939.giaory.xyz/?action=overview_horizontal&deck_code=${encodeURIComponent(this.code)}`;
-            // 转义代码中的特殊字符以便放入 data 属性
             const escapedCode = this.code.replace(/'/g, "\\'");
 
             return `
@@ -282,7 +288,7 @@
                   <span class="provider-name">${this.provider}</span>
                 </div>
                 <div class="card-actions">
-                  <button class="preview-btn" data-code="${this.code}" onclick="window.previewCard('${escapedCode}')">
+                  <button class="preview-btn" onclick="window.previewCard('${escapedCode}')">
                     <i class="fas fa-eye"></i> 预览
                   </button>
                 </div>
@@ -294,11 +300,10 @@
       });
     }
 
-    // ----- 复制功能 -----
+    // ----- 复制 -----
     window.copyCode = function(code) {
       if (!code) return;
       navigator.clipboard.writeText(code).then(() => {
-        // 简单反馈
         const btn = document.activeElement;
         if (btn) {
           const orig = btn.innerHTML;
@@ -306,7 +311,6 @@
           setTimeout(() => { btn.innerHTML = orig; }, 1500);
         }
       }).catch(() => {
-        // fallback
         const textarea = document.createElement('textarea');
         textarea.value = code;
         document.body.appendChild(textarea);
@@ -317,44 +321,61 @@
       });
     };
 
-    // ----- 预览 -----
+    // ----- 预览 (API返回HTML) -----
     window.previewCard = function(code) {
       if (!code) { alert('卡组代码为空'); return; }
       const url = `https://1939.giaory.xyz/?action=overview_horizontal&deck_code=${encodeURIComponent(code)}`;
       console.log('预览API请求:', url);
-      // 使用 fetch 获取并输出结果
+      
+      previewContent.innerHTML = '<div style="text-align:center;padding:2rem;color:#94a3b8;"><i class="fas fa-spinner fa-pulse"></i> 加载预览...</div>';
+      previewModal.style.display = 'flex';
+
       fetch(url)
         .then(res => {
           console.log('预览API响应状态:', res.status);
           return res.text();
         })
-        .then(text => {
-          console.log('预览API返回内容 (前200字符):', text.substring(0, 200));
-          // 尝试解析为图片，直接显示
-          previewImage.src = url;
-          previewImage.onerror = function() {
-            this.src = '';
-            this.alt = '预览加载失败，请检查控制台';
-          };
-          previewModal.style.display = 'flex';
+        .then(html => {
+          console.log('预览API返回HTML长度:', html.length);
+          // 尝试提取图片或直接嵌入HTML
+          // 检查是否包含图片
+          const imgMatch = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+          if (imgMatch && imgMatch[1]) {
+            previewContent.innerHTML = `<img src="${imgMatch[1]}" alt="卡组预览" style="max-width:100%;border-radius:8px;">`;
+          } else {
+            // 直接嵌入HTML（可能是完整页面或片段）
+            // 如果包含<html>或<body>，提取内容
+            let content = html;
+            const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+            if (bodyMatch) {
+              content = bodyMatch[1];
+            }
+            // 检查是否包含样式或脚本，简单清理
+            previewContent.innerHTML = content;
+            // 如果有图片，确保显示
+            const imgs = previewContent.querySelectorAll('img');
+            imgs.forEach(img => {
+              if (img.src && !img.src.startsWith('http')) {
+                // 相对路径可能无法加载
+              }
+            });
+          }
         })
         .catch(err => {
           console.error('预览API请求失败:', err);
-          previewImage.src = '';
-          previewImage.alt = '请求失败';
-          previewModal.style.display = 'flex';
+          previewContent.innerHTML = `<div style="text-align:center;padding:2rem;color:#ef4444;">预览加载失败: ${err.message}</div>`;
         });
     };
 
     function closePreview() {
       previewModal.style.display = 'none';
-      previewImage.src = '';
+      previewContent.innerHTML = '<div style="text-align:center;padding:2rem;color:#94a3b8;">加载预览中...</div>';
     }
     previewCloseBtn.onclick = closePreview;
     previewCloseBtn2.onclick = closePreview;
     previewModal.onclick = function(e) { if (e.target === this) closePreview(); };
 
-    // ----- 筛选 -----
+    // ----- 筛选 (不区分大小写) -----
     function getFilteredDecks() {
       const search = searchInput.value.trim().toLowerCase();
       const status = statusFilter.value;
@@ -365,7 +386,8 @@
         if (status === 'active' && deck.isReserve) return false;
         if (status === 'reserve' && !deck.isReserve) return false;
         if (selectedTags.length > 0) {
-          const hasTag = selectedTags.some(tag => deck.types.includes(tag));
+          // 使用小写比较
+          const hasTag = selectedTags.some(tag => deck.typesLower.includes(tag.toLowerCase()));
           if (!hasTag) return false;
         }
         return true;
@@ -381,14 +403,16 @@
 
     function updateTagOptions() {
       const tagSet = new Set();
-      allDecks.forEach(d => d.types.forEach(t => tagSet.add(t)));
+      allDecks.forEach(d => d.typesLower.forEach(t => tagSet.add(t)));
       const sortedTags = Array.from(tagSet).sort();
       const currentVal = Array.from(tagFilter.selectedOptions).map(o => o.value);
       tagFilter.innerHTML = '<option value="all">全部标签</option>';
       sortedTags.forEach(t => {
         const opt = document.createElement('option');
         opt.value = t;
-        opt.textContent = t;
+        // 显示时用原始大小写（从types中找）
+        const origTag = allDecks.find(d => d.typesLower.includes(t))?.types.find(tt => tt.toLowerCase() === t) || t;
+        opt.textContent = origTag;
         if (currentVal.includes(t) || currentVal.includes('all')) opt.selected = true;
         tagFilter.appendChild(opt);
       });
