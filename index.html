@@ -13,13 +13,11 @@
     body { background: #f5f7fb; display: flex; flex-direction: column; align-items: center; padding: 2rem 1rem 3rem; min-height: 100vh; }
     .container { max-width: 1440px; width: 100%; }
 
-    /* header */
     .header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; margin-bottom: 1.5rem; gap: 0.75rem 1.5rem; }
     .header h1 { font-weight: 500; font-size: 1.8rem; color: #1e293b; display: flex; align-items: center; gap: 10px; }
     .header h1 small { font-size: 1rem; font-weight: 400; color: #64748b; }
     .status-badge { background: #e9edf4; padding: 0.3rem 1rem; border-radius: 40px; font-size: 0.9rem; color: #1e293b; display: flex; align-items: center; gap: 8px; }
 
-    /* 筛选栏 */
     .filter-bar { display: flex; flex-wrap: wrap; gap: 0.8rem 1.2rem; background: white; padding: 1rem 1.5rem; border-radius: 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); margin-bottom: 1.5rem; align-items: center; border: 1px solid #eef2f6; }
     .filter-group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     .filter-group label { font-size: 0.8rem; font-weight: 500; color: #475569; }
@@ -30,7 +28,6 @@
     .filter-btn:hover { background: #0f172a; }
     .clear-btn { background: transparent; border: 1px solid #dce1e9; padding: 0.3rem 1.2rem; border-radius: 30px; font-size: 0.9rem; cursor: pointer; }
 
-    /* 分页 */
     .pagination-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; margin: 1rem 0 1.5rem; gap: 1rem; }
     .page-info { background: white; padding: 0.3rem 1.2rem; border-radius: 30px; font-size: 0.95rem; box-shadow: 0 1px 4px rgba(0,0,0,0.02); color: #334155; }
     .pagination-btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -38,10 +35,8 @@
     .pagination-btn:hover:not(:disabled) { background: #f1f5f9; border-color: #b9c4d4; }
     .pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* 卡片网格 */
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 0.5rem; }
 
-    /* 卡片样式 */
     .deck-card { border-radius: 20px; padding: 1.2rem 1.2rem 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.02); border: 1px solid #f0f2f6; display: flex; flex-direction: column; height: 100%; position: relative; background: #ffffff; transition: 0.15s; }
     .deck-card.active { background: #ffffff; border-color: #e2e8f0; }
     .deck-card.reserve { background: #1e293b; border-color: #334155; color: #e2e8f0; }
@@ -51,7 +46,6 @@
     .deck-card.reserve .deck-provider { border-top-color: #334155; color: #94a3b8; }
     .deck-card.reserve .provider-name { color: #e2e8f0; }
     .deck-card.reserve .type-tag { background: #3b4a63; color: #d1d9e6; border-color: #4b5a73; }
-    .deck-card.reserve .deck-status { background: #3b4a63; color: #d1d9e6; }
     .deck-card.reserve .card-footer { color: #64748b; }
     .deck-card.reserve .reserve-badge { background: #2d3a4f; color: #cbd5e1; }
     .deck-card.reserve .reserve-badge img { filter: brightness(0.9) invert(0.1); }
@@ -62,9 +56,13 @@
     .deck-name { font-weight: 600; font-size: 1.2rem; line-height: 1.3; color: #0f172a; word-break: break-word; }
     .reserve-badge { display: flex; align-items: center; background: #f1f5f9; padding: 0.1rem 0.5rem 0.1rem 0.3rem; border-radius: 40px; font-size: 0.65rem; font-weight: 500; color: #475569; gap: 3px; white-space: nowrap; }
     .reserve-badge img { width: 18px; height: 18px; object-fit: contain; display: block; }
-    .deck-status { display: inline-block; font-size: 0.65rem; font-weight: 500; padding: 0.15rem 0.6rem; border-radius: 40px; background: #dbeafe; color: #1e4b8a; margin-bottom: 0.3rem; letter-spacing: 0.2px; }
-    .deck-status.reserve { background: #3b4a63; color: #d1d9e6; }
-    .deck-code { background: #f8fafc; border-radius: 12px; padding: 0.4rem 0.7rem; font-family: monospace; font-size: 0.65rem; word-break: break-all; color: #1e293b; border: 1px solid #edf2f7; margin: 0.2rem 0 0.5rem; line-height: 1.4; }
+    .deck-code { background: #f8fafc; border-radius: 12px; padding: 0.4rem 0.7rem; font-family: monospace; font-size: 0.65rem; word-break: break-all; color: #1e293b; border: 1px solid #edf2f7; margin: 0.2rem 0 0.5rem; line-height: 1.4; position: relative; }
+    .deck-code-wrapper { position: relative; }
+    .copy-btn { position: absolute; top: 4px; right: 4px; background: rgba(255,255,255,0.85); border: 1px solid #dce1e9; border-radius: 20px; padding: 0.1rem 0.5rem; font-size: 0.6rem; cursor: pointer; color: #475569; transition: 0.15s; display: flex; align-items: center; gap: 3px; }
+    .copy-btn:hover { background: #eef2f6; }
+    .deck-card.reserve .copy-btn { background: #2d3a4f; border-color: #4b5a73; color: #cbd5e1; }
+    .deck-card.reserve .copy-btn:hover { background: #3b4a63; }
+
     .deck-meta { display: flex; flex-wrap: wrap; gap: 0.2rem 0.3rem; margin: 0.3rem 0 0.4rem; }
     .type-tag { background: #eef2ff; color: #374ea3; font-size: 0.65rem; padding: 0.1rem 0.6rem; border-radius: 30px; font-weight: 450; border: 1px solid #dfe7fd; }
     .deck-note { color: #475569; font-size: 0.85rem; line-height: 1.4; margin: 0.2rem 0 0.4rem; flex: 1; word-break: break-word; }
@@ -75,7 +73,6 @@
     .preview-btn:hover { background: #dbeafe; }
     .card-footer { display: flex; justify-content: flex-end; margin-top: 0.2rem; font-size: 0.6rem; color: #94a3b8; }
 
-    /* 弹窗 */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
     .modal-box { background: white; max-width: 460px; width: 100%; border-radius: 24px; padding: 2rem 1.5rem 1.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.2); text-align: center; position: relative; }
     .modal-box img { width: 100%; max-height: 300px; object-fit: contain; border-radius: 15px; margin-bottom: 1.2rem; }
@@ -112,7 +109,6 @@
     <div class="status-badge"><i class="fas fa-database"></i> <span id="totalCount">加载中…</span></div>
   </div>
 
-  <!-- 筛选栏 -->
   <div class="filter-bar" id="filterBar">
     <div class="filter-group">
       <label><i class="fas fa-search"></i></label>
@@ -147,12 +143,12 @@
   <div id="cardGrid" class="card-grid"><div class="loading"><i class="fas fa-spinner fa-pulse"></i> 加载卡组数据…</div></div>
 </div>
 
-<!-- 开屏弹窗 -->
+<!-- 开屏弹窗 (圆角15px) -->
 <div class="modal-overlay" id="splashModal">
   <div class="modal-box">
     <img src="https://images.weserv.nl/?url=ssl:www.kards.com/images/card/v52/zh-Hans/uncle_sam.avif&q=100" alt="Uncle Sam" style="border-radius:15px;">
     <h2>你关注百年匠魂了吗？</h2>
-    <p>B站关注「百年匠魂」，品鉴更多神金研发！</p>
+    <p>关注「百年匠魂」，品鉴神金研发</p>
     <div class="modal-actions">
       <button class="btn-primary" id="splashYes">是</button>
       <button class="btn-secondary" id="splashNo">还没有</button>
@@ -171,13 +167,12 @@
 
 <script>
   (function() {
-    // ----- 全局状态 -----
+    // ----- 全局 -----
     let allDecks = [];
     let filteredDecks = [];
     let currentPage = 1;
     const PAGE_SIZE = 12;
 
-    // DOM refs
     const gridEl = document.getElementById('cardGrid');
     const pageInfo = document.getElementById('pageInfo');
     const prevBtn = document.getElementById('prevPage');
@@ -189,18 +184,16 @@
     const applyBtn = document.getElementById('applyFilterBtn');
     const clearBtn = document.getElementById('clearFilterBtn');
 
-    // 开屏弹窗
     const splashModal = document.getElementById('splashModal');
     const splashYes = document.getElementById('splashYes');
     const splashNo = document.getElementById('splashNo');
 
-    // 预览弹窗
     const previewModal = document.getElementById('previewModal');
     const previewImage = document.getElementById('previewImage');
     const previewCloseBtn = document.getElementById('previewCloseBtn');
     const previewCloseBtn2 = document.getElementById('previewCloseBtn2');
 
-    // ----- 读取文件 data.xlsx -----
+    // ----- 读取 data.xlsx -----
     function loadDataFromFile() {
       return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
@@ -213,9 +206,7 @@
               const workbook = XLSX.read(data, { type: 'array' });
               const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
               const json = XLSX.utils.sheet_to_json(firstSheet, { header: 1, defval: '' });
-              // 过滤空行，取前5列
               const rows = json.filter(row => row.length >= 1 && row[0]?.toString().trim() !== '');
-              // 如果第一行是表头，跳过 (根据内容判断)
               let startIdx = 0;
               if (rows.length > 0) {
                 const header = rows[0];
@@ -242,7 +233,7 @@
       });
     }
 
-    // ----- 构建卡片数据 -----
+    // ----- 构建卡片 -----
     function buildDecksFromRows(rows) {
       return rows.map((row, index) => {
         const nameRaw = row.A || '未命名卡组';
@@ -265,13 +256,14 @@
           note: note || '—',
           provider: provider || '匿名',
           render: function() {
-            const statusText = this.isReserve ? '预备' : '现役';
             const cardClass = this.isReserve ? 'reserve' : 'active';
             const reserveBadgeHtml = this.isReserve
               ? `<span class="reserve-badge"><img src="reserve.png" alt="预备" onerror="this.style.display='none'"> 预备</span>`
               : '';
             const typeTags = this.types.map(t => `<span class="type-tag">${t}</span>`).join('');
             const previewUrl = `https://1939.giaory.xyz/?action=overview_horizontal&deck_code=${encodeURIComponent(this.code)}`;
+            // 转义代码中的特殊字符以便放入 data 属性
+            const escapedCode = this.code.replace(/'/g, "\\'");
 
             return `
               <div class="deck-card ${cardClass}">
@@ -279,10 +271,10 @@
                   <div class="deck-name">${this.name}</div>
                   ${reserveBadgeHtml}
                 </div>
-                <div>
-                  <span class="deck-status ${this.isReserve ? 'reserve' : ''}">${statusText}</span>
+                <div class="deck-code-wrapper">
+                  <div class="deck-code">${this.code || '—'}</div>
+                  <button class="copy-btn" onclick="window.copyCode('${escapedCode}')"><i class="fas fa-copy"></i> 复制</button>
                 </div>
-                <div class="deck-code">${this.code || '—'}</div>
                 <div class="deck-meta">${typeTags}</div>
                 <div class="deck-note">${this.note}</div>
                 <div class="deck-provider">
@@ -290,7 +282,7 @@
                   <span class="provider-name">${this.provider}</span>
                 </div>
                 <div class="card-actions">
-                  <button class="preview-btn" data-code="${this.code}" onclick="window.previewCard('${this.code}')">
+                  <button class="preview-btn" data-code="${this.code}" onclick="window.previewCard('${escapedCode}')">
                     <i class="fas fa-eye"></i> 预览
                   </button>
                 </div>
@@ -302,13 +294,56 @@
       });
     }
 
-    // ----- 预览功能 -----
+    // ----- 复制功能 -----
+    window.copyCode = function(code) {
+      if (!code) return;
+      navigator.clipboard.writeText(code).then(() => {
+        // 简单反馈
+        const btn = document.activeElement;
+        if (btn) {
+          const orig = btn.innerHTML;
+          btn.innerHTML = '<i class="fas fa-check"></i> 已复制';
+          setTimeout(() => { btn.innerHTML = orig; }, 1500);
+        }
+      }).catch(() => {
+        // fallback
+        const textarea = document.createElement('textarea');
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        alert('卡组代码已复制到剪贴板');
+      });
+    };
+
+    // ----- 预览 -----
     window.previewCard = function(code) {
-      if (!code) { alert('卡组代码为空，无法预览'); return; }
+      if (!code) { alert('卡组代码为空'); return; }
       const url = `https://1939.giaory.xyz/?action=overview_horizontal&deck_code=${encodeURIComponent(code)}`;
-      previewImage.src = url;
-      previewImage.onerror = function() { this.src = ''; this.alt = '预览加载失败'; };
-      previewModal.style.display = 'flex';
+      console.log('预览API请求:', url);
+      // 使用 fetch 获取并输出结果
+      fetch(url)
+        .then(res => {
+          console.log('预览API响应状态:', res.status);
+          return res.text();
+        })
+        .then(text => {
+          console.log('预览API返回内容 (前200字符):', text.substring(0, 200));
+          // 尝试解析为图片，直接显示
+          previewImage.src = url;
+          previewImage.onerror = function() {
+            this.src = '';
+            this.alt = '预览加载失败，请检查控制台';
+          };
+          previewModal.style.display = 'flex';
+        })
+        .catch(err => {
+          console.error('预览API请求失败:', err);
+          previewImage.src = '';
+          previewImage.alt = '请求失败';
+          previewModal.style.display = 'flex';
+        });
     };
 
     function closePreview() {
@@ -319,19 +354,16 @@
     previewCloseBtn2.onclick = closePreview;
     previewModal.onclick = function(e) { if (e.target === this) closePreview(); };
 
-    // ----- 筛选逻辑 -----
+    // ----- 筛选 -----
     function getFilteredDecks() {
       const search = searchInput.value.trim().toLowerCase();
       const status = statusFilter.value;
       const selectedTags = Array.from(tagFilter.selectedOptions).map(o => o.value).filter(v => v !== 'all');
 
       return allDecks.filter(deck => {
-        // 搜索
         if (search && !deck.name.toLowerCase().includes(search) && !deck.provider.toLowerCase().includes(search)) return false;
-        // 状态
         if (status === 'active' && deck.isReserve) return false;
         if (status === 'reserve' && !deck.isReserve) return false;
-        // 标签 (多选，只要包含任一选中标签即可)
         if (selectedTags.length > 0) {
           const hasTag = selectedTags.some(tag => deck.types.includes(tag));
           if (!hasTag) return false;
@@ -347,7 +379,6 @@
       updateTagOptions();
     }
 
-    // 更新标签下拉选项 (基于当前全部数据)
     function updateTagOptions() {
       const tagSet = new Set();
       allDecks.forEach(d => d.types.forEach(t => tagSet.add(t)));
@@ -361,13 +392,6 @@
         if (currentVal.includes(t) || currentVal.includes('all')) opt.selected = true;
         tagFilter.appendChild(opt);
       });
-      // 如果当前选中的值不在列表中，重置为 all
-      const selected = Array.from(tagFilter.selectedOptions).map(o => o.value);
-      if (selected.length === 0 || (selected.length === 1 && selected[0] === 'all')) {
-        // 保持 all 选中
-      } else {
-        // 确保至少有一个选中
-      }
     }
 
     // ----- 渲染分页 -----
@@ -422,16 +446,14 @@
       }
     }
 
-    // ----- 事件绑定 -----
+    // ----- 事件 -----
     applyBtn.addEventListener('click', applyFilters);
     clearBtn.addEventListener('click', function() {
       searchInput.value = '';
       statusFilter.value = 'all';
-      // 重置标签为 all
       Array.from(tagFilter.options).forEach(o => o.selected = (o.value === 'all'));
       applyFilters();
     });
-    // 回车搜索
     searchInput.addEventListener('keyup', function(e) { if (e.key === 'Enter') applyFilters(); });
 
     // ----- 开屏弹窗 -----
@@ -440,10 +462,8 @@
       window.open('https://space.bilibili.com/3546775476505152', '_blank');
       splashModal.style.display = 'none';
     };
-    // 点击背景关闭 (可选)
     splashModal.onclick = function(e) { if (e.target === this) splashModal.style.display = 'none'; };
 
-    // 启动
     init();
   })();
 </script>
