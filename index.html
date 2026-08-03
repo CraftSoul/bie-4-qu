@@ -18,16 +18,20 @@
     .header h1 small { font-size: 1rem; font-weight: 400; color: #64748b; }
     .status-badge { background: #e9edf4; padding: 0.3rem 1rem; border-radius: 40px; font-size: 0.9rem; color: #1e293b; display: flex; align-items: center; gap: 8px; }
 
+    /* 筛选栏 - 自动筛选，无按钮 */
     .filter-bar { display: flex; flex-wrap: wrap; gap: 0.8rem 1.2rem; background: white; padding: 1rem 1.5rem; border-radius: 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); margin-bottom: 1.5rem; align-items: center; border: 1px solid #eef2f6; }
     .filter-group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     .filter-group label { font-size: 0.8rem; font-weight: 500; color: #475569; }
     .filter-group input, .filter-group select { padding: 0.3rem 0.8rem; border-radius: 30px; border: 1px solid #dce1e9; background: white; font-size: 0.9rem; outline: none; min-width: 120px; }
     .filter-group select { min-width: 100px; }
-    .filter-group .tag-select { min-width: 180px; height: auto; padding: 0.2rem 0.5rem; }
-    .filter-btn { background: #1e293b; color: white; border: none; padding: 0.3rem 1.2rem; border-radius: 30px; font-size: 0.9rem; cursor: pointer; transition: 0.15s; }
-    .filter-btn:hover { background: #0f172a; }
-    .clear-btn { background: transparent; border: 1px solid #dce1e9; padding: 0.3rem 1.2rem; border-radius: 30px; font-size: 0.9rem; cursor: pointer; }
+    .tag-chips { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+    .tag-chip { background: #f1f4f9; padding: 0.15rem 0.8rem; border-radius: 30px; font-size: 0.75rem; font-weight: 450; color: #334155; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.1s; user-select: none; }
+    .tag-chip.active { background: #1e293b; color: white; border-color: #1e293b; }
+    .tag-chip:hover { background: #e2e8f0; }
+    .tag-chip.active:hover { background: #0f172a; }
+    .clear-btn { background: transparent; border: 1px solid #dce1e9; padding: 0.2rem 1rem; border-radius: 30px; font-size: 0.8rem; cursor: pointer; }
 
+    /* 分页 */
     .pagination-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; margin: 1rem 0 1.5rem; gap: 1rem; }
     .page-info { background: white; padding: 0.3rem 1.2rem; border-radius: 30px; font-size: 0.95rem; box-shadow: 0 1px 4px rgba(0,0,0,0.02); color: #334155; }
     .pagination-btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -35,6 +39,7 @@
     .pagination-btn:hover:not(:disabled) { background: #f1f5f9; border-color: #b9c4d4; }
     .pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
+    /* 卡片网格 */
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 0.5rem; }
 
     .deck-card { border-radius: 20px; padding: 1.2rem 1.2rem 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.02); border: 1px solid #f0f2f6; display: flex; flex-direction: column; height: 100%; position: relative; background: #ffffff; transition: 0.15s; }
@@ -56,12 +61,12 @@
     .deck-name { font-weight: 600; font-size: 1.2rem; line-height: 1.3; color: #0f172a; word-break: break-word; }
     .reserve-badge { display: flex; align-items: center; background: #f1f5f9; padding: 0.1rem 0.5rem 0.1rem 0.3rem; border-radius: 40px; font-size: 0.65rem; font-weight: 500; color: #475569; gap: 3px; white-space: nowrap; }
     .reserve-badge img { width: 18px; height: 18px; object-fit: contain; display: block; }
-    .deck-code { background: #f8fafc; border-radius: 12px; padding: 0.4rem 0.7rem; font-family: monospace; font-size: 0.65rem; word-break: break-all; color: #1e293b; border: 1px solid #edf2f7; margin: 0.2rem 0 0.5rem; line-height: 1.4; position: relative; }
-    .deck-code-wrapper { position: relative; }
-    .copy-btn { position: absolute; top: 4px; right: 4px; background: rgba(255,255,255,0.85); border: 1px solid #dce1e9; border-radius: 20px; padding: 0.1rem 0.5rem; font-size: 0.6rem; cursor: pointer; color: #475569; transition: 0.15s; display: flex; align-items: center; gap: 3px; }
-    .copy-btn:hover { background: #eef2f6; }
-    .deck-card.reserve .copy-btn { background: #2d3a4f; border-color: #4b5a73; color: #cbd5e1; }
-    .deck-card.reserve .copy-btn:hover { background: #3b4a63; }
+    .deck-code { background: #f8fafc; border-radius: 12px; padding: 0.4rem 0.7rem; font-family: monospace; font-size: 0.65rem; word-break: break-all; color: #1e293b; border: 1px solid #edf2f7; margin: 0.2rem 0 0.5rem; line-height: 1.4; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+    .deck-code .code-text { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+    .copy-btn { background: transparent; border: none; color: #64748b; cursor: pointer; font-size: 0.8rem; padding: 0 4px; transition: 0.15s; }
+    .copy-btn:hover { color: #1e293b; }
+    .deck-card.reserve .copy-btn { color: #94a3b8; }
+    .deck-card.reserve .copy-btn:hover { color: #e2e8f0; }
 
     .deck-meta { display: flex; flex-wrap: wrap; gap: 0.2rem 0.3rem; margin: 0.3rem 0 0.4rem; }
     .type-tag { background: #eef2ff; color: #374ea3; font-size: 0.65rem; padding: 0.1rem 0.6rem; border-radius: 30px; font-weight: 450; border: 1px solid #dfe7fd; }
@@ -73,6 +78,7 @@
     .preview-btn:hover { background: #dbeafe; }
     .card-footer { display: flex; justify-content: flex-end; margin-top: 0.2rem; font-size: 0.6rem; color: #94a3b8; }
 
+    /* 弹窗 */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
     .modal-box { background: white; max-width: 460px; width: 100%; border-radius: 24px; padding: 2rem 1.5rem 1.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.2); text-align: center; position: relative; }
     .modal-box img { width: 100%; max-height: 300px; object-fit: contain; border-radius: 15px; margin-bottom: 1.2rem; }
@@ -87,9 +93,7 @@
     .modal-close { position: absolute; top: 12px; right: 16px; font-size: 1.5rem; color: #94a3b8; cursor: pointer; background: none; border: none; }
 
     .preview-modal .modal-box { max-width: 700px; }
-    .preview-modal .preview-content { max-height: 500px; overflow: auto; background: #f8fafc; border-radius: 12px; padding: 0.5rem; display: flex; align-items: center; justify-content: center; }
-    .preview-modal .preview-content img { max-width: 100%; height: auto; display: block; border-radius: 8px; }
-    .preview-modal .preview-content .preview-placeholder { color: #94a3b8; padding: 2rem; text-align: center; }
+    .preview-modal img { max-height: 500px; width: 100%; object-fit: contain; border-radius: 12px; background: #f8fafc; }
 
     .no-data { text-align: center; padding: 3rem 1rem; color: #64748b; background: #f8fafc; border-radius: 40px; border: 1px dashed #dce1e9; }
     .loading { text-align: center; padding: 3rem 0; color: #94a3b8; }
@@ -101,17 +105,17 @@
       .filter-group { flex-wrap: wrap; }
       .filter-group input, .filter-group select { min-width: 100px; width: 100%; }
       .modal-box { padding: 1.5rem 1rem; }
-      .preview-modal .preview-content { max-height: 350px; }
     }
   </style>
 </head>
 <body>
 <div class="container" id="app">
   <div class="header">
-    <h1><i class="fas fa-layer-group" style="color: #3b82f6;"></i> Kards 卡组图鉴 <small>· 文件数据</small></h1>
+    <h1><i class="fas fa-layer-group" style="color: #3b82f6;"></i> Kards 卡组图鉴 <small>手动同步</small></h1>
     <div class="status-badge"><i class="fas fa-database"></i> <span id="totalCount">加载中…</span></div>
   </div>
 
+  <!-- 筛选栏 (自动筛选) -->
   <div class="filter-bar" id="filterBar">
     <div class="filter-group">
       <label><i class="fas fa-search"></i></label>
@@ -125,13 +129,10 @@
         <option value="reserve">预备</option>
       </select>
     </div>
-    <div class="filter-group">
+    <div class="filter-group" style="flex:1; min-width:180px;">
       <label>标签</label>
-      <select id="tagFilter" class="tag-select" multiple style="min-width:140px;height:auto;padding:0.2rem 0.5rem;">
-        <option value="all">全部标签</option>
-      </select>
+      <div class="tag-chips" id="tagChips"></div>
     </div>
-    <button class="filter-btn" id="applyFilterBtn"><i class="fas fa-filter"></i> 筛选</button>
     <button class="clear-btn" id="clearFilterBtn"><i class="fas fa-times"></i> 重置</button>
   </div>
 
@@ -153,8 +154,8 @@
     <h2>你关注百年匠魂了吗？</h2>
     <p>关注「百年匠魂」，品鉴神金研发</p>
     <div class="modal-actions">
-      <button class="btn-primary" id="splashYes">已关注</button>
-      <button class="btn-secondary" id="splashNo">还没有</button>
+      <button class="btn-primary" id="splashYes">是，已关注</button>
+      <button class="btn-secondary" id="splashNo">还没有，去关注</button>
     </div>
   </div>
 </div>
@@ -163,21 +164,21 @@
 <div class="modal-overlay preview-modal" id="previewModal" style="display:none;">
   <div class="modal-box">
     <button class="modal-close" id="previewCloseBtn">&times;</button>
-    <div id="previewContent" class="preview-content">
-      <div class="preview-placeholder"><i class="fas fa-spinner fa-pulse"></i> 加载预览...</div>
-    </div>
+    <div id="previewImageContainer"><img id="previewImage" src="" alt="卡组预览"></div>
     <div class="modal-actions"><button class="btn-secondary" id="previewCloseBtn2">关闭</button></div>
   </div>
 </div>
 
 <script>
   (function() {
-    // ----- 全局 -----
+    // ----- 全局状态 -----
     let allDecks = [];
     let filteredDecks = [];
     let currentPage = 1;
     const PAGE_SIZE = 12;
+    let activeTags = new Set(); // 当前选中的标签 (小写)
 
+    // DOM refs
     const gridEl = document.getElementById('cardGrid');
     const pageInfo = document.getElementById('pageInfo');
     const prevBtn = document.getElementById('prevPage');
@@ -185,20 +186,21 @@
     const totalSpan = document.getElementById('totalCount');
     const searchInput = document.getElementById('searchInput');
     const statusFilter = document.getElementById('statusFilter');
-    const tagFilter = document.getElementById('tagFilter');
-    const applyBtn = document.getElementById('applyFilterBtn');
+    const tagChipsEl = document.getElementById('tagChips');
     const clearBtn = document.getElementById('clearFilterBtn');
 
+    // 开屏弹窗
     const splashModal = document.getElementById('splashModal');
     const splashYes = document.getElementById('splashYes');
     const splashNo = document.getElementById('splashNo');
 
+    // 预览弹窗
     const previewModal = document.getElementById('previewModal');
-    const previewContent = document.getElementById('previewContent');
+    const previewImage = document.getElementById('previewImage');
     const previewCloseBtn = document.getElementById('previewCloseBtn');
     const previewCloseBtn2 = document.getElementById('previewCloseBtn2');
 
-    // ----- 读取 data.xlsx -----
+    // ----- 读取文件 data.xlsx -----
     function loadDataFromFile() {
       return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
@@ -238,7 +240,7 @@
       });
     }
 
-    // ----- 构建卡片 -----
+    // ----- 构建卡片数据 -----
     function buildDecksFromRows(rows) {
       return rows.map((row, index) => {
         const nameRaw = row.A || '未命名卡组';
@@ -250,7 +252,6 @@
         const isReserve = nameRaw.includes('*');
         const displayName = nameRaw.replace(/\*/g, '').trim();
         const types = typeRaw.split(/\s+/).filter(t => t.trim() !== '');
-        const typesLower = types.map(t => t.toLowerCase());
 
         return {
           id: index,
@@ -258,17 +259,17 @@
           fullName: nameRaw,
           isReserve,
           code,
-          types: types,
-          typesLower: typesLower,
+          types,
           note: note || '—',
           provider: provider || '匿名',
           render: function() {
+            const statusText = this.isReserve ? '预备' : '现役';
             const cardClass = this.isReserve ? 'reserve' : 'active';
             const reserveBadgeHtml = this.isReserve
               ? `<span class="reserve-badge"><img src="reserve.png" alt="预备" onerror="this.style.display='none'"> 预备</span>`
               : '';
             const typeTags = this.types.map(t => `<span class="type-tag">${t}</span>`).join('');
-            const escapedCode = this.code.replace(/'/g, "\\'");
+            const previewUrl = `https://1939.giaory.xyz/?action=overview_horizontal&deck_code=${encodeURIComponent(this.code)}`;
 
             return `
               <div class="deck-card ${cardClass}">
@@ -276,9 +277,9 @@
                   <div class="deck-name">${this.name}</div>
                   ${reserveBadgeHtml}
                 </div>
-                <div class="deck-code-wrapper">
-                  <div class="deck-code">${this.code || '—'}</div>
-                  <button class="copy-btn" onclick="window.copyCode('${escapedCode}')"><i class="fas fa-copy"></i> 复制</button>
+                <div class="deck-code">
+                  <span class="code-text">${this.code || '—'}</span>
+                  <button class="copy-btn" data-code="${this.code}" onclick="window.copyCode('${this.code.replace(/'/g, "\\'")}')"><i class="fas fa-copy"></i></button>
                 </div>
                 <div class="deck-meta">${typeTags}</div>
                 <div class="deck-note">${this.note}</div>
@@ -287,7 +288,7 @@
                   <span class="provider-name">${this.provider}</span>
                 </div>
                 <div class="card-actions">
-                  <button class="preview-btn" onclick="window.previewCard('${escapedCode}')">
+                  <button class="preview-btn" data-code="${this.code}" onclick="window.previewCard('${this.code.replace(/'/g, "\\'")}')">
                     <i class="fas fa-eye"></i> 预览
                   </button>
                 </div>
@@ -299,88 +300,88 @@
       });
     }
 
-    // ----- 复制 -----
+    // ----- 复制功能 -----
     window.copyCode = function(code) {
       if (!code) return;
       navigator.clipboard.writeText(code).then(() => {
-        const btn = document.activeElement;
+        // 简单反馈
+        const btn = document.querySelector(`.copy-btn[data-code="${code}"]`);
         if (btn) {
           const orig = btn.innerHTML;
-          btn.innerHTML = '<i class="fas fa-check"></i> 已复制';
-          setTimeout(() => { btn.innerHTML = orig; }, 1500);
+          btn.innerHTML = '<i class="fas fa-check"></i>';
+          setTimeout(() => btn.innerHTML = orig, 1200);
         }
       }).catch(() => {
+        // fallback
         const textarea = document.createElement('textarea');
         textarea.value = code;
         document.body.appendChild(textarea);
         textarea.select();
         document.execCommand('copy');
         document.body.removeChild(textarea);
-        alert('卡组代码已复制到剪贴板');
+        const btn = document.querySelector(`.copy-btn[data-code="${code}"]`);
+        if (btn) {
+          const orig = btn.innerHTML;
+          btn.innerHTML = '<i class="fas fa-check"></i>';
+          setTimeout(() => btn.innerHTML = orig, 1200);
+        }
       });
     };
 
-    // ----- 预览 (从API返回的HTML中提取图片) -----
+    // ----- 预览功能 -----
     window.previewCard = function(code) {
-      if (!code) { alert('卡组代码为空'); return; }
+      if (!code) { alert('卡组代码为空，无法预览'); return; }
       const url = `https://1939.giaory.xyz/?action=overview_horizontal&deck_code=${encodeURIComponent(code)}`;
-      
-      previewContent.innerHTML = '<div class="preview-placeholder"><i class="fas fa-spinner fa-pulse"></i> 加载预览...</div>';
+      previewImage.src = url;
+      previewImage.onerror = function() { this.src = ''; this.alt = '预览加载失败'; };
       previewModal.style.display = 'flex';
-
-      fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          // 尝试提取图片URL - 查找 img 标签的 src
-          const imgRegex = /<img[^>]+src=["']([^"']+)["']/i;
-          const match = html.match(imgRegex);
-          
-          if (match && match[1]) {
-            let imgUrl = match[1];
-            // 处理相对路径
-            if (imgUrl.startsWith('/')) {
-              imgUrl = 'https://1939.giaory.xyz' + imgUrl;
-            } else if (!imgUrl.startsWith('http')) {
-              imgUrl = 'https://1939.giaory.xyz/' + imgUrl;
-            }
-            previewContent.innerHTML = `<img src="${imgUrl}" alt="卡组预览" onerror="this.style.display='none';this.parentElement.innerHTML='<div class=\\'preview-placeholder\\'><i class=\\'fas fa-exclamation-circle\\'></i> 图片加载失败</div>'">`;
-          } else {
-            // 尝试查找 data:image 或 base64
-            const base64Regex = /data:image\/[^;]+;base64,[^"']+/i;
-            const base64Match = html.match(base64Regex);
-            if (base64Match) {
-              previewContent.innerHTML = `<img src="${base64Match[0]}" alt="卡组预览">`;
-            } else {
-              // 可能是直接返回的图片二进制，尝试作为图片处理
-              previewContent.innerHTML = `<div class="preview-placeholder"><i class="fas fa-exclamation-circle"></i> 未找到预览图片，请检查API返回</div>`;
-            }
-          }
-        })
-        .catch(err => {
-          previewContent.innerHTML = `<div class="preview-placeholder"><i class="fas fa-exclamation-circle"></i> 预览加载失败: ${err.message}</div>`;
-        });
     };
 
     function closePreview() {
       previewModal.style.display = 'none';
-      previewContent.innerHTML = '<div class="preview-placeholder"><i class="fas fa-spinner fa-pulse"></i> 加载预览...</div>';
+      previewImage.src = '';
     }
     previewCloseBtn.onclick = closePreview;
     previewCloseBtn2.onclick = closePreview;
     previewModal.onclick = function(e) { if (e.target === this) closePreview(); };
 
-    // ----- 筛选 (不区分大小写) -----
+    // ----- 标签芯片渲染 (不区分大小写) -----
+    function renderTagChips() {
+      const tagSet = new Set();
+      allDecks.forEach(d => d.types.forEach(t => tagSet.add(t.toLowerCase())));
+      const sortedTags = Array.from(tagSet).sort();
+
+      tagChipsEl.innerHTML = '';
+      sortedTags.forEach(tag => {
+        const chip = document.createElement('span');
+        chip.className = 'tag-chip' + (activeTags.has(tag) ? ' active' : '');
+        chip.textContent = tag;
+        chip.dataset.tag = tag;
+        chip.addEventListener('click', function() {
+          const t = this.dataset.tag;
+          if (activeTags.has(t)) {
+            activeTags.delete(t);
+          } else {
+            activeTags.add(t);
+          }
+          applyFilters();
+        });
+        tagChipsEl.appendChild(chip);
+      });
+    }
+
+    // ----- 筛选逻辑 (自动) -----
     function getFilteredDecks() {
       const search = searchInput.value.trim().toLowerCase();
       const status = statusFilter.value;
-      const selectedTags = Array.from(tagFilter.selectedOptions).map(o => o.value).filter(v => v !== 'all');
 
       return allDecks.filter(deck => {
         if (search && !deck.name.toLowerCase().includes(search) && !deck.provider.toLowerCase().includes(search)) return false;
         if (status === 'active' && deck.isReserve) return false;
         if (status === 'reserve' && !deck.isReserve) return false;
-        if (selectedTags.length > 0) {
-          const hasTag = selectedTags.some(tag => deck.typesLower.includes(tag.toLowerCase()));
+        if (activeTags.size > 0) {
+          const deckTagsLower = deck.types.map(t => t.toLowerCase());
+          const hasTag = Array.from(activeTags).some(tag => deckTagsLower.includes(tag));
           if (!hasTag) return false;
         }
         return true;
@@ -391,23 +392,16 @@
       filteredDecks = getFilteredDecks();
       currentPage = 1;
       renderPage(currentPage);
-      updateTagOptions();
+      // 更新芯片激活状态
+      document.querySelectorAll('.tag-chip').forEach(chip => {
+        chip.classList.toggle('active', activeTags.has(chip.dataset.tag));
+      });
     }
 
-    function updateTagOptions() {
-      const tagSet = new Set();
-      allDecks.forEach(d => d.typesLower.forEach(t => tagSet.add(t)));
-      const sortedTags = Array.from(tagSet).sort();
-      const currentVal = Array.from(tagFilter.selectedOptions).map(o => o.value);
-      tagFilter.innerHTML = '<option value="all">全部标签</option>';
-      sortedTags.forEach(t => {
-        const opt = document.createElement('option');
-        opt.value = t;
-        const origTag = allDecks.find(d => d.typesLower.includes(t))?.types.find(tt => tt.toLowerCase() === t) || t;
-        opt.textContent = origTag;
-        if (currentVal.includes(t) || currentVal.includes('all')) opt.selected = true;
-        tagFilter.appendChild(opt);
-      });
+    // 自动筛选: 绑定 input/change 事件
+    function bindAutoFilter() {
+      searchInput.addEventListener('input', applyFilters);
+      statusFilter.addEventListener('change', applyFilters);
     }
 
     // ----- 渲染分页 -----
@@ -442,6 +436,14 @@
       nextBtn.onclick = () => { if (!nextBtn.disabled) renderPage(currentPage + 1); };
     }
 
+    // ----- 重置 -----
+    function resetFilters() {
+      searchInput.value = '';
+      statusFilter.value = 'all';
+      activeTags.clear();
+      applyFilters();
+    }
+
     // ----- 初始化 -----
     async function init() {
       gridEl.innerHTML = `<div class="loading"><i class="fas fa-spinner fa-pulse"></i> 读取 data.xlsx …</div>`;
@@ -454,7 +456,8 @@
         }
         allDecks = buildDecksFromRows(rows);
         filteredDecks = [...allDecks];
-        updateTagOptions();
+        renderTagChips();
+        bindAutoFilter();
         renderPage(1);
       } catch (err) {
         console.error(err);
@@ -462,15 +465,8 @@
       }
     }
 
-    // ----- 事件 -----
-    applyBtn.addEventListener('click', applyFilters);
-    clearBtn.addEventListener('click', function() {
-      searchInput.value = '';
-      statusFilter.value = 'all';
-      Array.from(tagFilter.options).forEach(o => o.selected = (o.value === 'all'));
-      applyFilters();
-    });
-    searchInput.addEventListener('keyup', function(e) { if (e.key === 'Enter') applyFilters(); });
+    // ----- 事件绑定 -----
+    clearBtn.addEventListener('click', resetFilters);
 
     // ----- 开屏弹窗 -----
     splashYes.onclick = function() { splashModal.style.display = 'none'; };
@@ -480,6 +476,7 @@
     };
     splashModal.onclick = function(e) { if (e.target === this) splashModal.style.display = 'none'; };
 
+    // 启动
     init();
   })();
 </script>
