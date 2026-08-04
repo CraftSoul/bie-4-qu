@@ -120,7 +120,6 @@
     /* 随机弹窗 - 深色预备卡组 */
     .random-modal .modal-box { max-width: 460px; text-align: left; }
     .random-modal .modal-box .deck-card { border: none; box-shadow: none; padding: 0.5rem 0; background: transparent; }
-    /* 预备卡组在随机弹窗中强制深色 (与主列表一致) */
     .random-modal .modal-box .deck-card.reserve { 
       background: #1e293b; 
       border-color: #334155; 
@@ -135,8 +134,8 @@
     .random-modal .modal-box .deck-card.reserve .provider-name { color: #e2e8f0; }
     .random-modal .modal-box .deck-card.reserve .type-tag { background: #3b4a63; color: #d1d9e6; border-color: #4b5a73; }
     .random-modal .modal-box .deck-card.reserve .card-footer { color: #64748b; }
-    .random-modal .modal-box .deck-card.reserve .reserve-badge { background: #2d3a4f; color: #cbd5e1; display: inline-flex; align-items: center; background: #f1f5f9; padding: 0.1rem 0.5rem 0.1rem 0.3rem; border-radius: 40px; font-size: 0.65rem; font-weight: 500; color: #475569; gap: 3px; white-space: nowrap; }
-    .random-modal .modal-box .deck-card.reserve .reserve-badge img { filter: brightness(0.9) invert(0.1); width: 18px; height: 18px; object-fit: contain; display: inline-block; vertical-align: middle; }
+    .random-modal .modal-box .deck-card.reserve .reserve-badge { background: #2d3a4f; color: #cbd5e1; }
+    .random-modal .modal-box .deck-card.reserve .reserve-badge img { filter: brightness(0.9) invert(0.1); }
     .random-modal .modal-box .deck-card.reserve .copy-btn { color: #94a3b8; }
     .random-modal .modal-box .deck-card.reserve .copy-btn:hover { color: #e2e8f0; }
 
@@ -362,8 +361,9 @@
           provider: provider || '未找到',
           render: function() {
             const cardClass = this.isReserve ? 'reserve' : 'active';
+            // 预备徽章：直接显示 reserve.png，不加文字
             const reserveBadgeHtml = this.isReserve
-              ? `<span class="reserve-badge"><img src="reserve.png" alt="预备" onerror="this.style.display='none'"> 预备</span>`
+              ? `<span class="reserve-badge"><img src="reserve.png" alt="预备" onerror="this.style.display='none'"></span>`
               : '';
             const typeTags = this.types.map(t => `<span class="type-tag">${t}</span>`).join('');
             const previewUrl = `https://1939.giaory.xyz/?action=overview_horizontal&deck_code=${encodeURIComponent(this.code)}`;
@@ -451,8 +451,6 @@
       const deck = pool[randomIndex];
       // 渲染单个卡片
       randomCardContainer.innerHTML = deck.render();
-      // 微调：保留深色样式，无需额外覆盖，因为CSS已经针对 .random-modal .deck-card.reserve 做了深色
-      // 但为了确保对齐，reserve-badge 本身已经 inline-flex + align-items:center
       randomModal.style.display = 'flex';
     }
 
