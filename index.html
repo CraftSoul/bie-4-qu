@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>KARDS 卡组图鉴</title>
+  <title>KARDS 卡组图鉴 | 别-4区</title>
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <!-- SheetJS (XLSX) -->
@@ -17,8 +17,8 @@
     .header h1 { font-weight: 500; font-size: 1.8rem; color: #1e293b; display: flex; align-items: center; gap: 10px; }
     .header h1 small { font-size: 1rem; font-weight: 400; color: #64748b; }
 
-    /* 肃反名单按钮 - 替换原来的status-badge */
-    .sufan-btn {
+    .header-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .sufan-btn, .random-btn {
       background: #1e293b;
       color: #f1f5f9;
       padding: 0.4rem 1.4rem;
@@ -27,16 +27,17 @@
       font-weight: 500;
       border: none;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 8px;
       transition: 0.15s;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    .sufan-btn:hover { background: #0f172a; transform: scale(1.02); }
-    .sufan-btn i { font-size: 1rem; }
+    .sufan-btn:hover, .random-btn:hover { background: #0f172a; transform: scale(1.02); }
+    .random-btn { background: #2d3a4f; }
+    .random-btn i { font-size: 1rem; }
 
-    /* 筛选栏 - 自动筛选，无按钮 */
+    /* 筛选栏 */
     .filter-bar { display: flex; flex-wrap: wrap; gap: 0.8rem 1.2rem; background: white; padding: 1rem 1.5rem; border-radius: 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); margin-bottom: 1.5rem; align-items: center; border: 1px solid #eef2f6; }
     .filter-group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     .filter-group label { font-size: 0.8rem; font-weight: 500; color: #475569; }
@@ -96,7 +97,7 @@
     .preview-btn:hover { background: #dbeafe; }
     .card-footer { display: flex; justify-content: flex-end; margin-top: 0.2rem; font-size: 0.6rem; color: #94a3b8; }
 
-    /* 弹窗 */
+    /* 弹窗体系 */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
     .modal-box { background: white; max-width: 460px; width: 100%; border-radius: 24px; padding: 2rem 1.5rem 1.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.2); text-align: center; position: relative; }
     .modal-box img { width: auto; max-height: 300px; object-fit: contain; border-radius: 12px; margin-bottom: 1.2rem; }
@@ -116,7 +117,20 @@
     .no-data { text-align: center; padding: 3rem 1rem; color: #64748b; background: #f8fafc; border-radius: 40px; border: 1px dashed #dce1e9; }
     .loading { text-align: center; padding: 3rem 0; color: #94a3b8; }
 
-    /* 肃反名单弹窗专用 */
+    /* 随机弹窗 */
+    .random-modal .modal-box { max-width: 460px; text-align: left; }
+    .random-modal .modal-box .deck-card { border: none; box-shadow: none; padding: 0.5rem 0; background: transparent; }
+    .random-modal .modal-box .deck-card.reserve { background: transparent; color: #1e293b; }
+    .random-modal .modal-box .deck-card.reserve .deck-name { color: #0f172a; }
+    .random-modal .modal-box .deck-card.reserve .deck-code { background: #f1f4f9; border-color: #dce1e9; color: #1e293b; }
+    .random-modal .modal-box .deck-card.reserve .deck-note { color: #334155; }
+    .random-modal .modal-box .deck-card.reserve .deck-provider { border-top-color: #e2e8f0; color: #475569; }
+    .random-modal .modal-box .deck-card.reserve .provider-name { color: #1e293b; }
+    .random-modal .modal-box .deck-card.reserve .type-tag { background: #eef2ff; color: #374ea3; border-color: #dfe7fd; }
+    .random-modal .modal-box .deck-card.reserve .reserve-badge { background: #eef2f6; color: #334155; }
+    .random-modal .modal-box .deck-card.reserve .card-footer { color: #94a3b8; }
+
+    /* 肃反名单 */
     .sufan-modal .modal-box { max-width: 520px; text-align: left; }
     .sufan-modal .modal-box h2 { text-align: center; }
     .sufan-modal .modal-box .sufan-content { font-size: 0.98rem; line-height: 1.7; color: #1e293b; padding: 0.2rem 0; }
@@ -140,7 +154,10 @@
 <div class="container" id="app">
   <div class="header">
     <h1><i class="fas fa-layer-group" style="color: #3b82f6;"></i> KARDS 卡组图鉴 <small>手动同步</small></h1>
-    <button class="sufan-btn" id="sufanBtn"><i class="fas fa-scroll"></i> 肃反名单</button>
+    <div class="header-actions">
+      <button class="random-btn" id="randomBtn"><i class="fas fa-dice"></i> 随机卡组</button>
+      <button class="sufan-btn" id="sufanBtn"><i class="fas fa-scroll"></i> 肃反名单</button>
+    </div>
   </div>
 
   <!-- 筛选栏 (自动筛选) -->
@@ -198,6 +215,18 @@
   </div>
 </div>
 
+<!-- 随机卡组弹窗 -->
+<div class="modal-overlay random-modal" id="randomModal" style="display:none;">
+  <div class="modal-box">
+    <button class="modal-close" id="randomCloseBtn">&times;</button>
+    <h2 style="text-align:center; margin-bottom:0.5rem;"><i class="fas fa-dice" style="color:#3b82f6;"></i> 随机卡组</h2>
+    <div id="randomCardContainer"></div>
+    <div class="modal-actions" style="margin-top:0.8rem;">
+      <button class="btn-secondary" id="randomCloseBtn2">关闭</button>
+    </div>
+  </div>
+</div>
+
 <!-- 肃反名单弹窗 -->
 <div class="modal-overlay sufan-modal" id="sufanModal" style="display:none;">
   <div class="modal-box">
@@ -247,13 +276,19 @@
     const previewCloseBtn = document.getElementById('previewCloseBtn');
     const previewCloseBtn2 = document.getElementById('previewCloseBtn2');
 
-    // 肃反名单弹窗
+    // 随机弹窗
+    const randomModal = document.getElementById('randomModal');
+    const randomCardContainer = document.getElementById('randomCardContainer');
+    const randomCloseBtn = document.getElementById('randomCloseBtn');
+    const randomCloseBtn2 = document.getElementById('randomCloseBtn2');
+
+    // 肃反名单
     const sufanModal = document.getElementById('sufanModal');
     const sufanBtn = document.getElementById('sufanBtn');
     const sufanCloseBtn = document.getElementById('sufanCloseBtn');
     const sufanConfirmBtn = document.getElementById('sufanConfirmBtn');
 
-    // ----- 读取文件 data.xlsx -----
+    // ----- 读取 data.xlsx -----
     function loadDataFromFile() {
       return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
@@ -352,7 +387,7 @@
       });
     }
 
-    // ----- 复制功能 -----
+    // ----- 复制 -----
     window.copyCode = function(code) {
       if (!code) return;
       navigator.clipboard.writeText(code).then(() => {
@@ -378,7 +413,7 @@
       });
     };
 
-    // ----- 预览功能 -----
+    // ----- 预览 -----
     window.previewCard = function(code) {
       if (!code) { alert('卡组代码为空，无法预览'); return; }
       const url = `https://1939.giaory.xyz/?action=overview_horizontal&deck_code=${encodeURIComponent(code)}`;
@@ -395,7 +430,52 @@
     previewCloseBtn2.onclick = closePreview;
     previewModal.onclick = function(e) { if (e.target === this) closePreview(); };
 
-    // ----- 标签芯片渲染 (不区分大小写) -----
+    // ----- 随机卡组 -----
+    function showRandomDeck() {
+      const pool = filteredDecks.length > 0 ? filteredDecks : allDecks;
+      if (pool.length === 0) {
+        alert('当前没有卡组，无法随机抽取');
+        return;
+      }
+      const randomIndex = Math.floor(Math.random() * pool.length);
+      const deck = pool[randomIndex];
+      // 渲染单个卡片
+      randomCardContainer.innerHTML = deck.render();
+      // 微调样式：移除卡片的外边距和边框，因为弹窗内已有
+      const cardEl = randomCardContainer.querySelector('.deck-card');
+      if (cardEl) {
+        cardEl.style.margin = '0';
+        cardEl.style.boxShadow = 'none';
+        cardEl.style.border = 'none';
+        cardEl.style.padding = '0.2rem 0';
+        // 如果是预备卡组，在随机弹窗内保持浅色背景
+        if (cardEl.classList.contains('reserve')) {
+          cardEl.style.background = 'transparent';
+          cardEl.style.color = '#1e293b';
+          // 修正子元素颜色
+          cardEl.querySelectorAll('.deck-name, .provider-name, .deck-note, .deck-code, .type-tag, .card-footer, .reserve-badge').forEach(el => {
+            if (el.classList.contains('deck-name')) el.style.color = '#0f172a';
+            if (el.classList.contains('provider-name')) el.style.color = '#1e293b';
+            if (el.classList.contains('deck-note')) el.style.color = '#334155';
+            if (el.classList.contains('deck-code')) { el.style.background = '#f1f4f9'; el.style.borderColor = '#dce1e9'; el.style.color = '#1e293b'; }
+            if (el.classList.contains('type-tag')) { el.style.background = '#eef2ff'; el.style.color = '#374ea3'; el.style.borderColor = '#dfe7fd'; }
+            if (el.classList.contains('card-footer')) el.style.color = '#94a3b8';
+            if (el.classList.contains('reserve-badge')) { el.style.background = '#eef2f6'; el.style.color = '#334155'; }
+          });
+        }
+      }
+      randomModal.style.display = 'flex';
+    }
+
+    function closeRandomModal() {
+      randomModal.style.display = 'none';
+      randomCardContainer.innerHTML = '';
+    }
+    randomCloseBtn.onclick = closeRandomModal;
+    randomCloseBtn2.onclick = closeRandomModal;
+    randomModal.onclick = function(e) { if (e.target === this) closeRandomModal(); };
+
+    // ----- 标签芯片 -----
     function renderTagChips() {
       const tagSet = new Set();
       allDecks.forEach(d => d.types.forEach(t => tagSet.add(t.toLowerCase())));
@@ -420,7 +500,7 @@
       });
     }
 
-    // ----- 筛选逻辑 (自动) -----
+    // ----- 筛选 -----
     function getFilteredDecks() {
       const search = searchInput.value.trim().toLowerCase();
       const status = statusFilter.value;
@@ -452,7 +532,7 @@
       statusFilter.addEventListener('change', applyFilters);
     }
 
-    // ----- 渲染分页 -----
+    // ----- 分页渲染 -----
     function renderPage(page) {
       const total = filteredDecks.length;
       if (total === 0) {
@@ -514,6 +594,9 @@
     // ----- 事件绑定 -----
     clearBtn.addEventListener('click', resetFilters);
 
+    // 随机按钮
+    document.getElementById('randomBtn').addEventListener('click', showRandomDeck);
+
     // 开屏弹窗
     splashYes.onclick = function() { splashModal.style.display = 'none'; };
     splashNo.onclick = function() {
@@ -522,13 +605,9 @@
     };
     splashModal.onclick = function(e) { if (e.target === this) splashModal.style.display = 'none'; };
 
-    // 肃反名单弹窗
-    function openSufan() {
-      sufanModal.style.display = 'flex';
-    }
-    function closeSufan() {
-      sufanModal.style.display = 'none';
-    }
+    // 肃反
+    function openSufan() { sufanModal.style.display = 'flex'; }
+    function closeSufan() { sufanModal.style.display = 'none'; }
     sufanBtn.addEventListener('click', openSufan);
     sufanCloseBtn.addEventListener('click', closeSufan);
     sufanConfirmBtn.addEventListener('click', closeSufan);
