@@ -80,7 +80,6 @@
     .deck-name { font-weight: 600; font-size: 1.2rem; line-height: 1.3; color: #0f172a; word-break: break-word; }
     .reserve-badge { display: inline-flex; align-items: center; background: #f1f5f9; padding: 0.1rem 0.5rem 0.1rem 0.3rem; border-radius: 40px; font-size: 0.65rem; font-weight: 500; color: #475569; gap: 3px; white-space: nowrap; border: 1px solid #e2e8f0; }
     .reserve-badge img { width: 18px; height: 18px; object-fit: contain; display: inline-block; vertical-align: middle; }
-    /* 移除徽章中的文字 */
     .reserve-badge .badge-text { display: none; }
     .deck-code { background: #f8fafc; border-radius: 12px; padding: 0.4rem 0.7rem; font-family: monospace; font-size: 0.65rem; word-break: break-all; color: #1e293b; border: 1px solid #edf2f7; margin: 0.2rem 0 0.5rem; line-height: 1.4; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
     .deck-code .code-text { flex: 1; overflow: hidden; text-overflow: ellipsis; }
@@ -119,8 +118,8 @@
     .no-data { text-align: center; padding: 3rem 1rem; color: #64748b; background: #f8fafc; border-radius: 40px; border: 1px dashed #dce1e9; }
     .loading { text-align: center; padding: 3rem 0; color: #94a3b8; }
 
-    /* 随机弹窗 - 深色预备卡组 */
-    .random-modal .modal-box { max-width: 460px; text-align: left; }
+    /* 随机弹窗 - 深色预备卡组 + 说明 + 再抽一次 */
+    .random-modal .modal-box { max-width: 480px; text-align: left; }
     .random-modal .modal-box .deck-card { border: none; box-shadow: none; padding: 0.5rem 0; background: transparent; }
     .random-modal .modal-box .deck-card.reserve { 
       background: #1e293b; 
@@ -140,6 +139,9 @@
     .random-modal .modal-box .deck-card.reserve .reserve-badge img { filter: brightness(0.9) invert(0.1); }
     .random-modal .modal-box .deck-card.reserve .copy-btn { color: #94a3b8; }
     .random-modal .modal-box .deck-card.reserve .copy-btn:hover { color: #e2e8f0; }
+    .random-modal .random-hint { font-size: 0.85rem; color: #64748b; margin: 0.5rem 0 0.2rem; padding: 0.2rem 0.4rem; background: #f1f5f9; border-radius: 30px; display: inline-block; }
+    .random-modal .modal-actions .btn-redraw { background: #2d3a4f; color: white; }
+    .random-modal .modal-actions .btn-redraw:hover { background: #1e293b; }
 
     /* 肃反名单 */
     .sufan-modal .modal-box { max-width: 520px; text-align: left; }
@@ -226,14 +228,18 @@
   </div>
 </div>
 
-<!-- 随机卡组弹窗 -->
+<!-- 随机卡组弹窗 (含说明 + 再抽一次) -->
 <div class="modal-overlay random-modal" id="randomModal" style="display:none;">
   <div class="modal-box">
     <button class="modal-close" id="randomCloseBtn">&times;</button>
-    <h2 style="text-align:center; margin-bottom:0.5rem;"><i class="fas fa-dice" style="color:#3b82f6;"></i> 随机卡组</h2>
+    <h2 style="text-align:center; margin-bottom:0.25rem;"><i class="fas fa-dice" style="color:#3b82f6;"></i> 随机卡组</h2>
+    <div style="text-align:center; margin-bottom:0.4rem;">
+      <span class="random-hint"><i class="fas fa-filter"></i> 从当前筛选结果中随机抽取</span>
+    </div>
     <div id="randomCardContainer"></div>
     <div class="modal-actions" style="margin-top:0.8rem;">
       <button class="btn-secondary" id="randomCloseBtn2">关闭</button>
+      <button class="btn-redraw" id="randomRedrawBtn"><i class="fas fa-sync-alt"></i> 再抽一次</button>
     </div>
   </div>
 </div>
@@ -289,6 +295,7 @@
     const randomCardContainer = document.getElementById('randomCardContainer');
     const randomCloseBtn = document.getElementById('randomCloseBtn');
     const randomCloseBtn2 = document.getElementById('randomCloseBtn2');
+    const randomRedrawBtn = document.getElementById('randomRedrawBtn');
 
     const sufanModal = document.getElementById('sufanModal');
     const sufanBtn = document.getElementById('sufanBtn');
@@ -359,7 +366,6 @@
           provider: provider || '未找到',
           render: function() {
             const cardClass = this.isReserve ? 'reserve' : 'active';
-            // 预备徽章：仅显示图片，无文字无边框
             const reserveBadgeHtml = this.isReserve
               ? `<span class="reserve-badge"><img src="reserve.png" alt="预备" onerror="this.style.display='none'"></span>`
               : '';
@@ -437,16 +443,25 @@
     previewCloseBtn2.onclick = closePreview;
     previewModal.onclick = function(e) { if (e.target === this) closePreview(); };
 
-    // ----- 随机卡组 -----
-    function showRandomDeck() {
+    // ----- 随机卡组 (核心) -----
+    function getRandomDeck() {
       const pool = filteredDecks.length > 0 ? filteredDecks : allDecks;
-      if (pool.length === 0) {
-        alert('当前没有卡组，无法随机抽取');
+      if (pool.length === 0) return null;
+      const randomIndex = Math.floor(Math.random() * pool.length);
+      return pool[randomIndex];
+    }
+
+    function renderRandomDeck() {
+      const deck = getRandomDeck();
+      if (!deck) {
+        randomCardContainer.innerHTML = `<div class="no-data" style="padding:1rem;background:transparent;border:none;color:#94a3b8;">当前筛选无卡组，请调整筛选条件</div>`;
         return;
       }
-      const randomIndex = Math.floor(Math.random() * pool.length);
-      const deck = pool[randomIndex];
       randomCardContainer.innerHTML = deck.render();
+    }
+
+    function showRandomModal() {
+      renderRandomDeck();
       randomModal.style.display = 'flex';
     }
 
@@ -456,6 +471,9 @@
     }
     randomCloseBtn.onclick = closeRandomModal;
     randomCloseBtn2.onclick = closeRandomModal;
+    randomRedrawBtn.onclick = function() {
+      renderRandomDeck();
+    };
     randomModal.onclick = function(e) { if (e.target === this) closeRandomModal(); };
 
     // ----- 标签芯片 -----
@@ -576,7 +594,7 @@
 
     // ----- 事件绑定 -----
     clearBtn.addEventListener('click', resetFilters);
-    document.getElementById('randomBtn').addEventListener('click', showRandomDeck);
+    document.getElementById('randomBtn').addEventListener('click', showRandomModal);
 
     splashYes.onclick = function() { splashModal.style.display = 'none'; };
     splashNo.onclick = function() {
