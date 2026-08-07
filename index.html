@@ -78,7 +78,6 @@
       margin-left: 2px;
     }
     .api-toggle-btn.active-api { background: #1e293b; color: white; }
-    .api-toggle-btn.active-api .badge { background: #f1f5f9; color: #1e293b; }
 
     /* 筛选栏 */
     .filter-bar { display: flex; flex-wrap: wrap; gap: 0.8rem 1.2rem; background: white; padding: 1rem 1.5rem; border-radius: 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); margin-bottom: 1.5rem; align-items: center; border: 1px solid #eef2f6; }
@@ -262,7 +261,7 @@
       font-weight: 500; 
       color: #0f172a; 
       min-width: 100px; 
-      text-align: right; 
+      text-align: center; 
     }
     .sufan-modal .modal-box .sufan-content .thanks .name-list .desc { 
       color: #64748b; 
@@ -312,7 +311,6 @@
         <span><i class="fas fa-server"></i> 预览源</span>
         <button class="api-toggle-btn" id="apiToggleBtn">
           <span id="apiLabel">DECKER</span>
-          <span class="badge" id="apiBadge">默认</span>
         </button>
       </div>
       <button class="random-btn" id="randomBtn"><i class="fas fa-dice"></i> 随机卡组</button>
@@ -471,7 +469,6 @@
     // API 切换按钮
     const apiToggleBtn = document.getElementById('apiToggleBtn');
     const apiLabel = document.getElementById('apiLabel');
-    const apiBadge = document.getElementById('apiBadge');
 
     const randomModal = document.getElementById('randomModal');
     const randomCardContainer = document.getElementById('randomCardContainer');
@@ -484,15 +481,13 @@
     const sufanCloseBtn = document.getElementById('sufanCloseBtn');
     const sufanConfirmBtn = document.getElementById('sufanConfirmBtn');
 
-    // ----- API 切换逻辑 (移除badge) -----
+    // ----- API 切换逻辑 -----
     function updateApiToggle() {
       if (currentApi === 'decker') {
         apiLabel.textContent = 'DECKER';
-        apiBadge.textContent = '默认';
         apiToggleBtn.classList.add('active-api');
       } else {
         apiLabel.textContent = '军械库';
-        apiBadge.textContent = '自建';
         apiToggleBtn.classList.remove('active-api');
       }
     }
