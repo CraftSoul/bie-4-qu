@@ -37,7 +37,6 @@
     .random-btn { background: #2d3a4f; }
     .random-btn i { font-size: 1rem; }
 
-    /* 顶部API切换 - 一行简洁按钮 */
     .api-toggle-wrapper {
       display: flex;
       align-items: center;
@@ -157,7 +156,7 @@
     .modal-close { position: absolute; top: 12px; right: 16px; font-size: 1.5rem; color: #94a3b8; cursor: pointer; background: none; border: none; }
 
     .preview-modal .modal-box { max-width: 700px; }
-    .preview-modal img { max-height: 500px; width: 100%; object-fit: contain; border-radius: 12px; background: #f8fafc; }
+    .preview-modal img { max-height: 500px; width: 100%; object-fit: contain; background: #f8fafc; }
 
     .no-data { text-align: center; padding: 3rem 1rem; color: #64748b; background: #f8fafc; border-radius: 40px; border: 1px dashed #dce1e9; }
     .loading { text-align: center; padding: 3rem 0; color: #94a3b8; }
@@ -196,9 +195,6 @@
     .sufan-modal .modal-box .sufan-content .thanks { margin-top: 0.8rem; border-top: 1px solid #eef2f6; padding-top: 0.8rem; color: #475569; font-size: 0.92rem; }
     .sufan-modal .modal-box .sufan-content .thanks span { display: inline-block; background: #f8fafc; padding: 0.05rem 0.6rem; border-radius: 20px; margin: 0.15rem 0.2rem; }
 
-    /* 预览 API 选择器 (已废弃，现由顶部按钮控制) */
-    .preview-api-selector { display: none; }
-
     /* 加载状态 */
     .preview-loading { display: none; align-items: center; justify-content: center; gap: 12px; padding: 20px; color: #475569; font-size: 0.95rem; }
     .preview-loading.show { display: flex; }
@@ -227,7 +223,6 @@
   <div class="header">
     <h1><i class="fas fa-layer-group" style="color: #3b82f6;"></i> KARDS 卡组图鉴 <small>手动同步</small></h1>
     <div class="header-actions">
-      <!-- API 切换按钮：放在随机和肃反之间 -->
       <div class="api-toggle-wrapper">
         <span><i class="fas fa-server"></i> 预览源</span>
         <button class="api-toggle-btn" id="apiToggleBtn">
@@ -501,7 +496,7 @@
                   <span class="provider-name">${this.provider}</span>
                 </div>
                 <div class="card-actions">
-                  <button class="preview-btn" data-code="${this.code}" onclick="window.previewCard('${this.code.replace(/'/g, "\\'")}')">
+                  <button class="preview-btn" data-code="${this.code}" onclick="window.previewCard('${this.code.replace(/'/g, "\\'")}',this.name)">
                     <i class="fas fa-eye"></i> 预览
                   </button>
                 </div>
@@ -540,7 +535,7 @@
     };
 
     // ----- 预览 (使用 currentApi) -----
-    window.previewCard = async function(code) {
+    window.previewCard = async function(code,name) {
       if (!code) { alert('卡组代码为空，无法预览'); return; }
 
       const apiType = currentApi; // 使用当前切换的 API
@@ -576,13 +571,14 @@
             },
             body: JSON.stringify({
               deckCode: code,
-              cols: 10,
+              cols: 8,
               quality: 10,
               lang: 'zh-Hans',
               bgColor: 'transparent',
               addStatsCard: true,
               foldEnabled: false,
               qrEnabled: false,
+              statsTitle: name,
             })
           });
 
