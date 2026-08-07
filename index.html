@@ -156,7 +156,7 @@
     .modal-close { position: absolute; top: 12px; right: 16px; font-size: 1.5rem; color: #94a3b8; cursor: pointer; background: none; border: none; }
 
     .preview-modal .modal-box { max-width: 700px; }
-    .preview-modal img { max-height: 500px; width: 100%; object-fit: contain; background: #f8fafc; }
+    .preview-modal img { max-height: 500px; width: 100%; object-fit: contain; background: #f8fafc; border-radius: 0 !important; }
 
     .no-data { text-align: center; padding: 3rem 1rem; color: #64748b; background: #f8fafc; border-radius: 40px; border: 1px dashed #dce1e9; }
     .loading { text-align: center; padding: 3rem 0; color: #94a3b8; }
@@ -186,14 +186,17 @@
     .random-modal .modal-actions .btn-redraw { background: #2d3a4f; color: white; }
     .random-modal .modal-actions .btn-redraw:hover { background: #1e293b; }
 
-    /* 肃反名单 */
-    .sufan-modal .modal-box { max-width: 520px; text-align: left; }
+    /* 肃反名单 - 优化样式 */
+    .sufan-modal .modal-box { max-width: 560px; text-align: left; }
     .sufan-modal .modal-box h2 { text-align: center; }
     .sufan-modal .modal-box .sufan-content { font-size: 0.98rem; line-height: 1.7; color: #1e293b; padding: 0.2rem 0; }
     .sufan-modal .modal-box .sufan-content .highlight { background: #f1f5f9; padding: 0.1rem 0.5rem; border-radius: 6px; font-weight: 500; }
     .sufan-modal .modal-box .sufan-content .group-name { font-weight: 600; color: #0f172a; }
     .sufan-modal .modal-box .sufan-content .thanks { margin-top: 0.8rem; border-top: 1px solid #eef2f6; padding-top: 0.8rem; color: #475569; font-size: 0.92rem; }
     .sufan-modal .modal-box .sufan-content .thanks span { display: inline-block; background: #f8fafc; padding: 0.05rem 0.6rem; border-radius: 20px; margin: 0.15rem 0.2rem; }
+    .sufan-modal .modal-box .sufan-content .thanks .thanks-title { font-weight: 600; color: #1e293b; display: block; margin-bottom: 0.2rem; }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list { display: flex; flex-wrap: wrap; gap: 0.2rem; }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list span { background: #f1f5f9; padding: 0.05rem 0.6rem; border-radius: 20px; font-size: 0.85rem; }
 
     /* 加载状态 */
     .preview-loading { display: none; align-items: center; justify-content: center; gap: 12px; padding: 20px; color: #475569; font-size: 0.95rem; }
@@ -286,8 +289,6 @@
   <div class="modal-box">
     <button class="modal-close" id="previewCloseBtn">&times;</button>
     
-    <!-- 预览源选择器已移除，由顶部按钮控制 -->
-
     <!-- 加载状态 -->
     <div class="preview-loading" id="previewLoading">
       <div class="spinner"></div>
@@ -318,7 +319,7 @@
   </div>
 </div>
 
-<!-- 肃反名单弹窗 -->
+<!-- 肃反名单弹窗 (优化样式) -->
 <div class="modal-overlay sufan-modal" id="sufanModal" style="display:none;">
   <div class="modal-box">
     <button class="modal-close" id="sufanCloseBtn">&times;</button>
@@ -328,8 +329,10 @@
       <p>啊我顺带宣一下，欢迎加入 <span class="group-name"><a href="https://qun.qq.com/universal-share/share?ac=1&authKey=p9SJMQNnGKgl94PmO4Ixi1I8iRzzUxKuGMWUiOujijMiDBCyCCABoIteumN0ev8P&busi_data=eyJncm91cENvZGUiOiIxMDU1ODYwNzgzIiwidG9rZW4iOiJPa1h6eHNzMlFRR2c0MkRIWHBNckpacCtlb0o1emhXU0RhTzk5ZjRCTXVlcmdTeFVPS2ZoMjk2b29WOWRudXBiIiwidWluIjoiMzg3NDM5MzkxMiJ9&data=Cz_1oIZobMTvf5aEfFitjUKXXquM6gU_iUcR5pXDEl2dVQibZiWFNy43TCjOABJSorvZnd85vdJBHu12HniNNg&svctype=4&tempid=h5_group_info">KARDS交流协会</a></span></p>
       <p>(点击跳转)</p>
       <div class="thanks">
-        <strong>特别鸣谢：</strong><br>
-        <span>百年匠魂</span> <span>别-4</span> <span>"速切玩家"</span> <span>𝙔𝙊𝙐</span> <span>狂三様のネコ</span> <span>Ｂｅｏｗｕｌｆ</span> <span>high</span> <span>我是…バカ？！！</span> <span>亻尔女子口马（周末在线)</span>
+        <span class="thanks-title">特别鸣谢：</span>
+        <div class="name-list">
+          <span>百年匠魂</span> <span>别-4</span> <span>"速切玩家"</span> <span>𝙔𝙊𝙐</span> <span>狂三様のネコ</span> <span>Ｂｅｏｗｕｌｆ</span> <span>high</span> <span>我是…バカ？！！</span> <span>亻尔女子口马（周末在线)</span>
+        </div>
       </div>
     </div>
     <div class="modal-actions" style="margin-top:1.2rem;">
@@ -349,6 +352,9 @@
 
     // API 状态：'decker' 或 'kapi'
     let currentApi = 'decker';
+
+    // 预览缓存：key = apiType + code, value = imageUrl
+    const previewCache = new Map();
 
     // DOM refs
     const gridEl = document.getElementById('cardGrid');
@@ -403,11 +409,9 @@
     function toggleApi() {
       currentApi = (currentApi === 'decker' ? 'kapi' : 'decker');
       updateApiToggle();
-      // 如果预览弹窗开着，不自动刷新，用户重新点击预览即可
     }
 
     apiToggleBtn.addEventListener('click', toggleApi);
-    // 初始状态
     updateApiToggle();
 
     // ----- 读取 data.xlsx -----
@@ -534,19 +538,35 @@
       });
     };
 
-    // ----- 预览 (使用 currentApi) -----
-    window.previewCard = async function(code,name) {
+    // ----- 预览 (使用 currentApi + 缓存) -----
+    window.previewCard = async function(code, name) {
       if (!code) { alert('卡组代码为空，无法预览'); return; }
 
-      const apiType = currentApi; // 使用当前切换的 API
+      const apiType = currentApi;
+      const cacheKey = apiType + '|' + code;
       const loadingEl = previewLoading;
       const errorEl = previewError;
       const imageEl = previewImage;
+
+      // 如果随机弹窗开着，先关闭，避免覆盖
+      if (randomModal.style.display === 'flex') {
+        randomModal.style.display = 'none';
+        randomCardContainer.innerHTML = '';
+      }
 
       loadingEl.classList.add('show');
       errorEl.classList.remove('show');
       imageEl.style.display = 'none';
       previewModal.style.display = 'flex';
+
+      // 检查缓存
+      if (previewCache.has(cacheKey)) {
+        const cachedUrl = previewCache.get(cacheKey);
+        imageEl.src = cachedUrl;
+        imageEl.style.display = 'block';
+        loadingEl.classList.remove('show');
+        return;
+      }
 
       try {
         let imageUrl;
@@ -559,6 +579,7 @@
             img.onerror = () => reject(new Error('DECKER 服务加载失败，请切换至军械库 API'));
             img.src = imageUrl;
           });
+          previewCache.set(cacheKey, imageUrl);
           imageEl.src = imageUrl;
           imageEl.style.display = 'block';
           loadingEl.classList.remove('show');
@@ -592,6 +613,7 @@
             throw new Error('军械库 API 返回数据缺少 mainImage 字段');
           }
 
+          previewCache.set(cacheKey, data.mainImage);
           imageEl.src = data.mainImage;
           imageEl.style.display = 'block';
           loadingEl.classList.remove('show');
@@ -634,6 +656,10 @@
     }
 
     function showRandomModal() {
+      // 如果预览弹窗开着，先关闭
+      if (previewModal.style.display === 'flex') {
+        closePreview();
+      }
       renderRandomDeck();
       randomModal.style.display = 'flex';
     }
