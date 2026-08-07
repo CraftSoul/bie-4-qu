@@ -188,19 +188,95 @@
     .random-modal .modal-actions .btn-redraw { background: #2d3a4f; color: white; }
     .random-modal .modal-actions .btn-redraw:hover { background: #1e293b; }
 
-    /* 肃反名单 - 优化样式 + 列表式鸣谢 */
-    .sufan-modal .modal-box { max-width: 560px; text-align: left; }
-    .sufan-modal .modal-box h2 { text-align: center; }
-    .sufan-modal .modal-box .sufan-content { font-size: 0.98rem; line-height: 1.7; color: #1e293b; padding: 0.2rem 0; }
-    .sufan-modal .modal-box .sufan-content .highlight { background: #f1f5f9; padding: 0.1rem 0.5rem; border-radius: 6px; font-weight: 500; }
-    .sufan-modal .modal-box .sufan-content .group-name { font-weight: 600; color: #0f172a; }
-    .sufan-modal .modal-box .sufan-content .thanks { margin-top: 0.8rem; border-top: 1px solid #eef2f6; padding-top: 0.8rem; }
-    .sufan-modal .modal-box .sufan-content .thanks .thanks-title { font-weight: 600; color: #1e293b; display: block; margin-bottom: 0.3rem; }
-    .sufan-modal .modal-box .sufan-content .thanks .name-list { list-style: none; padding: 0; margin: 0; }
-    .sufan-modal .modal-box .sufan-content .thanks .name-list li { display: flex; align-items: baseline; padding: 0.15rem 0; border-bottom: 1px dashed #f1f5f9; font-size: 0.9rem; }
-    .sufan-modal .modal-box .sufan-content .thanks .name-list li:last-child { border-bottom: none; }
-    .sufan-modal .modal-box .sufan-content .thanks .name-list .person { font-weight: 500; color: #0f172a; min-width: 100px; }
-    .sufan-modal .modal-box .sufan-content .thanks .name-list .desc { color: #64748b; font-size: 0.85rem; margin-left: 0.5rem; }
+    /* ===== 肃反名单 - 优化样式 + 列表式鸣谢 + 限制高度滚动 ===== */
+    .sufan-modal .modal-box { 
+      max-width: 560px; 
+      text-align: left; 
+      max-height: 90vh; 
+      display: flex; 
+      flex-direction: column; 
+      padding: 1.8rem 1.5rem 1.5rem;
+    }
+    .sufan-modal .modal-box h2 { 
+      text-align: center; 
+      flex-shrink: 0; 
+    }
+    /* 可滚动内容区 */
+    .sufan-scroll-area {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      padding-right: 4px; 
+      margin-top: 0.4rem;
+      max-height: 55vh; 
+    }
+    .sufan-scroll-area::-webkit-scrollbar { width: 5px; }
+    .sufan-scroll-area::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px; }
+    .sufan-scroll-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+
+    .sufan-modal .modal-box .sufan-content { 
+      font-size: 0.98rem; 
+      line-height: 1.7; 
+      color: #1e293b; 
+      padding: 0.2rem 0; 
+    }
+    .sufan-modal .modal-box .sufan-content .highlight { 
+      background: #f1f5f9; 
+      padding: 0.1rem 0.5rem; 
+      border-radius: 6px; 
+      font-weight: 500; 
+    }
+    .sufan-modal .modal-box .sufan-content .group-name { 
+      font-weight: 600; 
+      color: #0f172a; 
+    }
+    .sufan-modal .modal-box .sufan-content .thanks { 
+      margin-top: 0.8rem; 
+      border-top: 1px solid #eef2f6; 
+      padding-top: 0.8rem; 
+    }
+    .sufan-modal .modal-box .sufan-content .thanks .thanks-title { 
+      font-weight: 600; 
+      color: #1e293b; 
+      display: block; 
+      margin-bottom: 0.3rem; 
+    }
+    /* 鸣谢列表右对齐 */
+    .sufan-modal .modal-box .sufan-content .thanks .name-list { 
+      list-style: none; 
+      padding: 0; 
+      margin: 0; 
+      text-align: right; 
+    }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li { 
+      display: flex; 
+      align-items: baseline; 
+      justify-content: flex-end; 
+      padding: 0.15rem 0; 
+      border-bottom: 1px dashed #f1f5f9; 
+      font-size: 0.9rem; 
+      gap: 6px;
+    }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:last-child { 
+      border-bottom: none; 
+    }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list .person { 
+      font-weight: 500; 
+      color: #0f172a; 
+      min-width: 100px; 
+      text-align: right; 
+    }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list .desc { 
+      color: #64748b; 
+      font-size: 0.85rem; 
+      margin-left: 0.3rem; 
+      text-align: left; 
+      min-width: 80px;
+    }
+
+    .sufan-modal .modal-actions { 
+      flex-shrink: 0; 
+      margin-top: 1.2rem; 
+    }
 
     /* 加载状态 */
     .preview-loading { display: none; align-items: center; justify-content: center; gap: 12px; padding: 20px; color: #475569; font-size: 0.95rem; }
@@ -218,10 +294,13 @@
       .filter-group { flex-wrap: wrap; }
       .filter-group input, .filter-group select { min-width: 100px; width: 100%; }
       .modal-box { padding: 1.5rem 1rem; }
-      .sufan-modal .modal-box { padding: 1.8rem 1.2rem; }
+      .sufan-modal .modal-box { padding: 1.8rem 1.2rem; max-height: 95vh; }
+      .sufan-scroll-area { max-height: 50vh; }
       .api-toggle-wrapper { padding: 0.2rem 0.6rem; }
       .api-toggle-wrapper span { font-size: 0.65rem; }
       .api-toggle-btn { font-size: 0.7rem; padding: 0.1rem 0.7rem; }
+      .sufan-modal .modal-box .sufan-content .thanks .name-list .person { min-width: 70px; }
+      .sufan-modal .modal-box .sufan-content .thanks .name-list .desc { min-width: 60px; }
     }
   </style>
 </head>
@@ -323,31 +402,32 @@
   </div>
 </div>
 
-<!-- 肃反名单弹窗 (优化样式 + 列表式鸣谢) -->
+<!-- ===== 肃反名单弹窗 (滚动 + 右对齐鸣谢) ===== -->
 <div class="modal-overlay sufan-modal" id="sufanModal" style="display:none;">
   <div class="modal-box">
     <button class="modal-close" id="sufanCloseBtn">&times;</button>
     <h2><i class="fas fa-scroll" style="color: #b91c1c;"></i> 肃反名单</h2>
-    <div class="sufan-content">
-      <p>本图鉴为<span class="highlight"><a href="https://qun.qq.com/universal-share/share?ac=1&authKey=5VX2Lz%2BXnfxeF3vhZ6acRZzYrq6JtGx12I%2BMtfR%2BEECRUU746oy%2FsEYDQVK6iT6x&busi_data=eyJncm91cENvZGUiOiI1MzY0NzAyMjciLCJ0b2tlbiI6Ik9ZOFllVE1ndHp2dmFyemRzTUZlRmc0Yk1vRFM2amcvd2NRQkxwTVovTUZhdUtpbGl6TnQ0MEVFVGY0Uis5eWYiLCJ1aW4iOiIzODc0MzkzOTEyIn0%3D&data=q3PEJ1sOc1tor1134BtOKuNbpdYt7Ll2QsNI5yisvFaYFmV_3LZDTDFVY-hrYnlq0QwIKo4NgaWjp1P5CJiZog&svctype=4&tempid=h5_group_info">KARDS 先锋营地</a></span> 特供，卡组由群友提供分享，经审核组整理编纂，向所有KARDS玩家开放</p>
-      <p>啊我顺带宣一下，欢迎加入 <span class="group-name"><a href="https://qun.qq.com/universal-share/share?ac=1&authKey=p9SJMQNnGKgl94PmO4Ixi1I8iRzzUxKuGMWUiOujijMiDBCyCCABoIteumN0ev8P&busi_data=eyJncm91cENvZGUiOiIxMDU1ODYwNzgzIiwidG9rZW4iOiJPa1h6eHNzMlFRR2c0MkRIWHBNckpacCtlb0o1emhXU0RhTzk5ZjRCTXVlcmdTeFVPS2ZoMjk2b29WOWRudXBiIiwidWluIjoiMzg3NDM5MzkxMiJ9&data=Cz_1oIZobMTvf5aEfFitjUKXXquM6gU_iUcR5pXDEl2dVQibZiWFNy43TCjOABJSorvZnd85vdJBHu12HniNNg&svctype=4&tempid=h5_group_info">KARDS交流协会</a></span></p>
-      <p>(点击跳转)</p>
-      <div class="thanks">
-        <span class="thanks-title">特别鸣谢：</span>
-        <ul class="name-list">
-          <li><span class="person">百年匠魂</span><span class="desc">技术工兵</span></li>
-          <li><span class="person">别-4</span><span class="desc">背水一战</span></li>
-          <li><span class="person">＂速切玩家＂</span><span class="desc">卡后室了</span></li>
-          <li><span class="person">𝙔𝙊𝙐</span><span class="desc">沈幼楚喵</span></li>
-          <li><span class="person">狂三様のネコ</span><span class="desc">至善至美</span></li>
-          <li><span class="person">Ｂｅｏｗｕｌｆ</span><span class="desc">一只猫娘</span></li>
-          <li><span class="person">high</span><span class="desc"></span>高人来了</li>
-          <li><span class="person">我是…バカ？！！</span><span class="desc">Baka</span></li>
-          <li><span class="person">亻尔女子口马（周末在线)</span><span class="desc">114514</span></li>
-        </ul>
+    <div class="sufan-scroll-area">
+      <div class="sufan-content">
+        <p>本图鉴为<span class="highlight"><a href="https://qun.qq.com/universal-share/share?ac=1&authKey=5VX2Lz%2BXnfxeF3vhZ6acRZzYrq6JtGx12I%2BMtfR%2BEECRUU746oy%2FsEYDQVK6iT6x&busi_data=eyJncm91cENvZGUiOiI1MzY0NzAyMjciLCJ0b2tlbiI6Ik9ZOFllVE1ndHp2dmFyemRzTUZlRmc0Yk1vRFM2amcvd2NRQkxwTVovTUZhdUtpbGl6TnQ0MEVFVGY0Uis5eWYiLCJ1aW4iOiIzODc0MzkzOTEyIn0%3D&data=q3PEJ1sOc1tor1134BtOKuNbpdYt7Ll2QsNI5yisvFaYFmV_3LZDTDFVY-hrYnlq0QwIKo4NgaWjp1P5CJiZog&svctype=4&tempid=h5_group_info">KARDS先锋营地</a></span> 特供，卡组由群友提供分享，经审核组整理编纂，向所有KARDS玩家开放</p>
+        <p>啊我顺带宣一下，欢迎加入 <span class="group-name"><a href="https://qun.qq.com/universal-share/share?ac=1&authKey=p9SJMQNnGKgl94PmO4Ixi1I8iRzzUxKuGMWUiOujijMiDBCyCCABoIteumN0ev8P&busi_data=eyJncm91cENvZGUiOiIxMDU1ODYwNzgzIiwidG9rZW4iOiJPa1h6eHNzMlFRR2c0MkRIWHBNckpacCtlb0o1emhXU0RhTzk5ZjRCTXVlcmdTeFVPS2ZoMjk2b29WOWRudXBiIiwidWluIjoiMzg3NDM5MzkxMiJ9&data=Cz_1oIZobMTvf5aEfFitjUKXXquM6gU_iUcR5pXDEl2dVQibZiWFNy43TCjOABJSorvZnd85vdJBHu12HniNNg&svctype=4&tempid=h5_group_info">KARDS交流协会</a></span></p>
+        <div class="thanks">
+          <span class="thanks-title">特别鸣谢：</span>
+          <ul class="name-list">
+            <li><span class="person">百年匠魂</span><span class="desc">技术工兵</span></li>
+            <li><span class="person">别-4</span><span class="desc">背水一战</span></li>
+            <li><span class="person">＂速切玩家＂</span><span class="desc">卡后室了</span></li>
+            <li><span class="person">𝙔𝙊𝙐</span><span class="desc">沈幼楚喵</span></li>
+            <li><span class="person">狂三様のネコ</span><span class="desc">至善至美</span></li>
+            <li><span class="person">Ｂｅｏｗｕｌｆ</span><span class="desc">一只猫娘</span></li>
+            <li><span class="person">high</span><span class="desc">高人来了</span></li>
+            <li><span class="person">我是…バカ？！！</span><span class="desc">Baka</span></li>
+            <li><span class="person">亻尔女子口马（周末在线)</span><span class="desc">114514</span></li>
+          </ul>
+        </div>
       </div>
     </div>
-    <div class="modal-actions" style="margin-top:1.2rem;">
+    <div class="modal-actions">
       <button class="btn-secondary" id="sufanConfirmBtn">批斗！</button>
     </div>
   </div>
@@ -560,13 +640,11 @@
       const errorEl = previewError;
       const imageEl = previewImage;
 
-      // 不关闭任何弹窗，预览弹窗 z-index 最高，覆盖在上层
       loadingEl.classList.add('show');
       errorEl.classList.remove('show');
       imageEl.style.display = 'none';
       previewModal.style.display = 'flex';
 
-      // 检查缓存
       if (previewCache.has(cacheKey)) {
         const cachedUrl = previewCache.get(cacheKey);
         imageEl.src = cachedUrl;
@@ -633,7 +711,6 @@
       }
     };
 
-    // 关闭预览 (不关闭随机弹窗)
     function closePreview() {
       previewModal.style.display = 'none';
       previewImage.style.display = 'none';
@@ -645,7 +722,7 @@
     previewCloseBtn2.onclick = closePreview;
     previewModal.onclick = function(e) { if (e.target === this) closePreview(); };
 
-    // ----- 随机卡组 (核心) -----
+    // ----- 随机卡组 -----
     function getRandomDeck() {
       const pool = filteredDecks.length > 0 ? filteredDecks : allDecks;
       if (pool.length === 0) return null;
