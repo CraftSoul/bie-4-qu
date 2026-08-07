@@ -141,8 +141,10 @@
     .preview-btn:hover { background: #dbeafe; }
     .card-footer { display: flex; justify-content: flex-end; margin-top: 0.2rem; font-size: 0.6rem; color: #94a3b8; }
 
-    /* 弹窗体系 */
+    /* 弹窗体系 - 提高预览弹窗层级 */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
+    .preview-modal { z-index: 1100; } /* 预览弹窗置于最上层 */
+
     .modal-box { background: white; max-width: 460px; width: 100%; border-radius: 24px; padding: 2rem 1.5rem 1.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.2); text-align: center; position: relative; }
     .modal-box img { width: auto; max-height: 300px; object-fit: contain; border-radius: 12px; margin-bottom: 1.2rem; }
     .modal-box h2 { font-size: 1.3rem; font-weight: 500; color: #0f172a; margin-bottom: 0.5rem; }
@@ -186,17 +188,19 @@
     .random-modal .modal-actions .btn-redraw { background: #2d3a4f; color: white; }
     .random-modal .modal-actions .btn-redraw:hover { background: #1e293b; }
 
-    /* 肃反名单 - 优化样式 */
+    /* 肃反名单 - 优化样式 + 列表式鸣谢 */
     .sufan-modal .modal-box { max-width: 560px; text-align: left; }
     .sufan-modal .modal-box h2 { text-align: center; }
     .sufan-modal .modal-box .sufan-content { font-size: 0.98rem; line-height: 1.7; color: #1e293b; padding: 0.2rem 0; }
     .sufan-modal .modal-box .sufan-content .highlight { background: #f1f5f9; padding: 0.1rem 0.5rem; border-radius: 6px; font-weight: 500; }
     .sufan-modal .modal-box .sufan-content .group-name { font-weight: 600; color: #0f172a; }
-    .sufan-modal .modal-box .sufan-content .thanks { margin-top: 0.8rem; border-top: 1px solid #eef2f6; padding-top: 0.8rem; color: #475569; font-size: 0.92rem; }
-    .sufan-modal .modal-box .sufan-content .thanks span { display: inline-block; background: #f8fafc; padding: 0.05rem 0.6rem; border-radius: 20px; margin: 0.15rem 0.2rem; }
-    .sufan-modal .modal-box .sufan-content .thanks .thanks-title { font-weight: 600; color: #1e293b; display: block; margin-bottom: 0.2rem; }
-    .sufan-modal .modal-box .sufan-content .thanks .name-list { display: flex; flex-wrap: wrap; gap: 0.2rem; }
-    .sufan-modal .modal-box .sufan-content .thanks .name-list span { background: #f1f5f9; padding: 0.05rem 0.6rem; border-radius: 20px; font-size: 0.85rem; }
+    .sufan-modal .modal-box .sufan-content .thanks { margin-top: 0.8rem; border-top: 1px solid #eef2f6; padding-top: 0.8rem; }
+    .sufan-modal .modal-box .sufan-content .thanks .thanks-title { font-weight: 600; color: #1e293b; display: block; margin-bottom: 0.3rem; }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list { list-style: none; padding: 0; margin: 0; }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li { display: flex; align-items: baseline; padding: 0.15rem 0; border-bottom: 1px dashed #f1f5f9; font-size: 0.9rem; }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:last-child { border-bottom: none; }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list .person { font-weight: 500; color: #0f172a; min-width: 100px; }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list .desc { color: #64748b; font-size: 0.85rem; margin-left: 0.5rem; }
 
     /* 加载状态 */
     .preview-loading { display: none; align-items: center; justify-content: center; gap: 12px; padding: 20px; color: #475569; font-size: 0.95rem; }
@@ -284,7 +288,7 @@
   </div>
 </div>
 
-<!-- 预览弹窗 -->
+<!-- 预览弹窗 (z-index 最高) -->
 <div class="modal-overlay preview-modal" id="previewModal" style="display:none;">
   <div class="modal-box">
     <button class="modal-close" id="previewCloseBtn">&times;</button>
@@ -319,7 +323,7 @@
   </div>
 </div>
 
-<!-- 肃反名单弹窗 (优化样式) -->
+<!-- 肃反名单弹窗 (优化样式 + 列表式鸣谢) -->
 <div class="modal-overlay sufan-modal" id="sufanModal" style="display:none;">
   <div class="modal-box">
     <button class="modal-close" id="sufanCloseBtn">&times;</button>
@@ -330,9 +334,17 @@
       <p>(点击跳转)</p>
       <div class="thanks">
         <span class="thanks-title">特别鸣谢：</span>
-        <div class="name-list">
-          <span>百年匠魂</span> <span>别-4</span> <span>"速切玩家"</span> <span>𝙔𝙊𝙐</span> <span>狂三様のネコ</span> <span>Ｂｅｏｗｕｌｆ</span> <span>high</span> <span>我是…バカ？！！</span> <span>亻尔女子口马（周末在线)</span>
-        </div>
+        <ul class="name-list">
+          <li><span class="person">百年匠魂</span><span class="desc">技术工兵</span></li>
+          <li><span class="person">别-4</span><span class="desc">背水一战</span></li>
+          <li><span class="person">＂速切玩家＂</span><span class="desc">卡后室了</span></li>
+          <li><span class="person">𝙔𝙊𝙐</span><span class="desc">沈幼楚喵</span></li>
+          <li><span class="person">狂三様のネコ</span><span class="desc">至善至美</span></li>
+          <li><span class="person">Ｂｅｏｗｕｌｆ</span><span class="desc">一只猫娘</span></li>
+          <li><span class="person">high</span><span class="desc"></span>高人来了</li>
+          <li><span class="person">我是…バカ？！！</span><span class="desc">Baka</span></li>
+          <li><span class="person">亻尔女子口马（周末在线)</span><span class="desc">114514</span></li>
+        </ul>
       </div>
     </div>
     <div class="modal-actions" style="margin-top:1.2rem;">
@@ -393,7 +405,7 @@
     const sufanCloseBtn = document.getElementById('sufanCloseBtn');
     const sufanConfirmBtn = document.getElementById('sufanConfirmBtn');
 
-    // ----- API 切换逻辑 -----
+    // ----- API 切换逻辑 (移除badge) -----
     function updateApiToggle() {
       if (currentApi === 'decker') {
         apiLabel.textContent = 'DECKER';
@@ -538,7 +550,7 @@
       });
     };
 
-    // ----- 预览 (使用 currentApi + 缓存) -----
+    // ----- 预览 (使用 currentApi + 缓存, 不关闭随机弹窗) -----
     window.previewCard = async function(code, name) {
       if (!code) { alert('卡组代码为空，无法预览'); return; }
 
@@ -548,12 +560,7 @@
       const errorEl = previewError;
       const imageEl = previewImage;
 
-      // 如果随机弹窗开着，先关闭，避免覆盖
-      if (randomModal.style.display === 'flex') {
-        randomModal.style.display = 'none';
-        randomCardContainer.innerHTML = '';
-      }
-
+      // 不关闭任何弹窗，预览弹窗 z-index 最高，覆盖在上层
       loadingEl.classList.add('show');
       errorEl.classList.remove('show');
       imageEl.style.display = 'none';
@@ -626,7 +633,7 @@
       }
     };
 
-    // 关闭预览
+    // 关闭预览 (不关闭随机弹窗)
     function closePreview() {
       previewModal.style.display = 'none';
       previewImage.style.display = 'none';
@@ -656,10 +663,6 @@
     }
 
     function showRandomModal() {
-      // 如果预览弹窗开着，先关闭
-      if (previewModal.style.display === 'flex') {
-        closePreview();
-      }
       renderRandomDeck();
       randomModal.style.display = 'flex';
     }
