@@ -37,18 +37,20 @@
     .random-btn { background: #2d3a4f; }
     .random-btn i { font-size: 1rem; }
 
+    /* 统一 API 切换器尺寸与按钮一致 */
     .api-toggle-wrapper {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       background: white;
-      padding: 0.2rem 0.6rem 0.2rem 1rem;
+      padding: 0.2rem 0.4rem 0.2rem 0.8rem;
       border-radius: 40px;
       border: 1px solid #e2e8f0;
       box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+      height: 40px; /* 与 .sufan-btn / .random-btn 高度匹配 */
     }
     .api-toggle-wrapper span {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: #475569;
       font-weight: 500;
       white-space: nowrap;
@@ -58,7 +60,7 @@
       border: none;
       border-radius: 30px;
       padding: 0.2rem 1rem;
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       font-weight: 500;
       color: #1e293b;
       cursor: pointer;
@@ -67,6 +69,8 @@
       align-items: center;
       gap: 4px;
       white-space: nowrap;
+      height: 30px; /* 内部按钮高度适应 */
+      line-height: 1;
     }
     .api-toggle-btn:hover { background: #e2e8f0; }
     .api-toggle-btn .badge {
@@ -307,9 +311,9 @@
       .modal-box { padding: 1.5rem 1rem; }
       .sufan-modal .modal-box { padding: 1.8rem 1.2rem; max-height: 95vh; }
       .sufan-scroll-area { max-height: 50vh; }
-      .api-toggle-wrapper { padding: 0.2rem 0.6rem; }
-      .api-toggle-wrapper span { font-size: 0.65rem; }
-      .api-toggle-btn { font-size: 0.7rem; padding: 0.1rem 0.7rem; }
+      .api-toggle-wrapper { padding: 0.2rem 0.6rem; height: 36px; }
+      .api-toggle-wrapper span { font-size: 0.7rem; }
+      .api-toggle-btn { font-size: 0.7rem; padding: 0.1rem 0.7rem; height: 26px; }
       .sufan-modal .modal-box .sufan-content .thanks .name-list .person { min-width: 70px; }
       .sufan-modal .modal-box .sufan-content .thanks .name-list .desc { min-width: 60px; }
     }
