@@ -279,6 +279,25 @@
     .preview-error { display: none; color: #dc2626; background: #fef2f2; padding: 12px 16px; border-radius: 12px; font-size: 0.9rem; margin: 8px 0; }
     .preview-error.show { display: block; }
 
+    /* 开屏弹窗 - 无底无框高亮按钮 */
+    #splashModal .splash-sufan-highlight {
+      background: transparent;
+      border: none;
+      color: #b91c1c;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 0.2rem 0.6rem;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: 0.15s;
+      display: inline-block;
+    }
+    #splashModal .splash-sufan-highlight:hover {
+      color: #7f1d1d;
+      transform: scale(1.05);
+    }
+
     @media (max-width: 600px) {
       .header h1 { font-size: 1.3rem; }
       .card-grid { grid-template-columns: 1fr; }
@@ -304,7 +323,7 @@
       <div class="api-toggle-wrapper">
         <span><i class="fas fa-server"></i> 预览源</span>
         <button class="api-toggle-btn" id="apiToggleBtn">
-          <span id="apiLabel">DECKER</span>
+          <span id="apiLabel">军械库</span>
         </button>
       </div>
       <button class="random-btn" id="randomBtn"><i class="fas fa-dice"></i> 随机卡组</button>
@@ -344,12 +363,12 @@
   <div id="cardGrid" class="card-grid"><div class="loading"><i class="fas fa-spinner fa-pulse"></i> 加载卡组数据…</div></div>
 </div>
 
-<!-- 开屏弹窗 -->
+<!-- 开屏弹窗 (肃反名单按钮高亮无框) -->
 <div class="modal-overlay" id="splashModal">
   <div class="modal-box">
     <img src="https://images.weserv.nl/?url=ssl:www.kards.com/images/card/v52/zh-Hans/uncle_sam.avif&q=100" alt="Uncle Sam" style="border-radius:12px;box-shadow: 0 8px 20px rgba(0,0,0,0.5);border: 1px solid #c7aa60;">
     <h2>你关注百年匠魂了吗？</h2>
-    <p>你已被列入「肃反名单」</p>
+    <p>你已被列入 <button class="splash-sufan-highlight" id="splashSufanBtn">「肃反名单」</button></p>
     <p><a href="https://craftsoul.github.io/soviettap/">拉伸Tap</a></p>
     <div class="modal-actions">
       <button class="btn-primary" id="splashYes">已关注</button>
@@ -433,8 +452,8 @@
     const PAGE_SIZE = 12;
     let activeTags = new Set();
 
-    // API 状态：'decker' 或 'kapi'
-    let currentApi = 'decker';
+    // API 状态：默认 'kapi' (军械库)
+    let currentApi = 'kapi';
 
     // 预览缓存：key = apiType + code, value = imageUrl
     const previewCache = new Map();
@@ -475,6 +494,9 @@
     const sufanCloseBtn = document.getElementById('sufanCloseBtn');
     const sufanConfirmBtn = document.getElementById('sufanConfirmBtn');
 
+    // 开屏弹窗中的肃反按钮
+    const splashSufanBtn = document.getElementById('splashSufanBtn');
+
     // ----- API 切换逻辑 -----
     function updateApiToggle() {
       if (currentApi === 'decker') {
@@ -492,6 +514,7 @@
     }
 
     apiToggleBtn.addEventListener('click', toggleApi);
+    // 默认显示军械库 (currentApi 已设为 'kapi')
     updateApiToggle();
 
     // ----- 读取 data.xlsx -----
@@ -833,6 +856,16 @@
       applyFilters();
     }
 
+    // ----- 开屏弹窗中的肃反按钮 -----
+    function openSufan() { sufanModal.style.display = 'flex'; }
+    function closeSufan() { sufanModal.style.display = 'none'; }
+
+    splashSufanBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      splashModal.style.display = 'none';
+      openSufan();
+    });
+
     // ----- 初始化 -----
     async function init() {
       gridEl.innerHTML = `<div class="loading"><i class="fas fa-spinner fa-pulse"></i> 读取 data.xlsx …</div>`;
@@ -865,8 +898,6 @@
     };
     splashModal.onclick = function(e) { if (e.target === this) splashModal.style.display = 'none'; };
 
-    function openSufan() { sufanModal.style.display = 'flex'; }
-    function closeSufan() { sufanModal.style.display = 'none'; }
     sufanBtn.addEventListener('click', openSufan);
     sufanCloseBtn.addEventListener('click', closeSufan);
     sufanConfirmBtn.addEventListener('click', closeSufan);
