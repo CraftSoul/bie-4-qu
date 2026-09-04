@@ -622,41 +622,6 @@
       });
     }
 
-    window.analyzeCard = async function(code, name, types, note, provider) {
-      const modal = document.getElementById('analysisModal');
-      const content = document.getElementById('analysisContent');
-      modal.style.display = 'flex';
-      content.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-pulse"></i> AI正在分析卡组，请稍候…</div>';
-
-      try {
-        const response = await fetch('https://bie-4-qu.craftsoul.workers.dev', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            deckCode: code,
-            deckName: name,
-            types: types.split(','),
-            note: note,
-            provider: provider
-          })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok || data.error) {
-          throw new Error(data.error || '分析失败');
-        }
-        const html = data.analysis
-          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-          .replace(/\n/g, '<br>')
-          .replace(/ - /g, '&nbsp;&nbsp;- ');
-
-        content.innerHTML = `<div style="text-align:left;font-size:0.95rem;line-height:1.8;padding:0.5rem 0;">${html}</div>`;
-      } catch (error) {
-        content.innerHTML = `<div class="preview-error show">${error.message || 'AI分析失败，请重试'}</div>`;
-      }
-    };
-
     // ----- 复制 -----
     window.copyCode = function(code) {
       if (!code) return;
@@ -769,6 +734,42 @@
     previewCloseBtn.onclick = closePreview;
     previewCloseBtn2.onclick = closePreview;
     previewModal.onclick = function(e) { if (e.target === this) closePreview(); };
+    
+    
+    window.analyzeCard = async function(code, name, types, note, provider) {
+      const modal = document.getElementById('analysisModal');
+      const content = document.getElementById('analysisContent');
+      modal.style.display = 'flex';
+      content.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-pulse"></i> AI正在分析卡组，请稍候…</div>';
+
+      try {
+        const response = await fetch('https://bie-4-qu.craftsoul.workers.dev', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            deckCode: code,
+            deckName: name,
+            types: types.split(','),
+            note: note,
+            provider: provider
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || data.error) {
+          throw new Error(data.error || '分析失败');
+        }
+        const html = data.analysis
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\n/g, '<br>')
+          .replace(/ - /g, '&nbsp;&nbsp;- ');
+
+        content.innerHTML = `<div style="text-align:left;font-size:0.95rem;line-height:1.8;padding:0.5rem 0;">${html}</div>`;
+      } catch (error) {
+        content.innerHTML = `<div class="preview-error show">${error.message || 'AI分析失败，请重试'}</div>`;
+      }
+    };
 
     // ----- 随机卡组 -----
     function getRandomDeck() {
