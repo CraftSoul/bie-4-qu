@@ -447,6 +447,18 @@
   </div>
 </div>
 
+<!-- AI分析弹窗 -->
+<div class="modal-overlay" id="analysisModal" style="display:none;">
+  <div class="modal-box" style="max-width:680px;max-height:90vh;display:flex;flex-direction:column;">
+    <button class="modal-close" onclick="document.getElementById('analysisModal').style.display='none'">&times;</button>
+    <h2><i class="fas fa-robot" style="color:#3b82f6;"></i> AI 卡组分析</h2>
+    <div id="analysisContent" style="flex:1;overflow-y:auto;padding-right:4px;max-height:65vh;"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="document.getElementById('analysisModal').style.display='none'">关闭</button>
+    </div>
+  </div>
+</div>
+
 <script>
   (function() {
     // ----- 全局状态 -----
