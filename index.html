@@ -755,7 +755,7 @@
       content.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-pulse"></i> AI正在分析卡组，请稍候…</div>';
 
       try {
-        const response = await fetch('https://bie-4-qu.craftsoul.workers.dev', {
+        const response = await fetch('https://osm.craftsoul.workers.dev', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
