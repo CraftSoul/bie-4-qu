@@ -135,6 +135,19 @@
       font-weight: 600;
     }
     .filter-chip.active:hover, .tag-chip.active:hover { background: #0f172a; }
+    .filter-chip.nation-chip.active {
+  background: var(--nation-bg, #1e293b);
+  color: var(--nation-fg, #ffffff);
+  border-color: var(--nation-bg, #1e293b);
+  font-weight: 600;
+}
+.filter-chip.nation-chip.active:hover {
+  background: var(--nation-bg, #0f172a);
+  filter: brightness(1.08);
+}
+.filter-chip.nation-chip.active img {
+  filter: none;
+}
     .filter-chip img {
       width: 18px;
       height: 18px;
@@ -142,7 +155,6 @@
       flex-shrink: 0;
       display: block;
     }
-    .filter-chip.active img { filter: brightness(0) invert(1); }
 
     .search-input {
       padding: 0.55rem 1rem;
@@ -678,25 +690,29 @@
     const splashSufanBtn = document.getElementById('splashSufanBtn');
 
     // ===== 构建主国 / 盟国 chips =====
-    function buildNationChips() {
-      // 主国：任意 + 5 大国
-      let majorHtml = `<span class="filter-chip${currentMajor === '' ? ' active' : ''}" data-val="">任意</span>`;
-      mainNationOptions.forEach(f => {
-        majorHtml += `<span class="filter-chip${currentMajor === f ? ' active' : ''}" data-val="${f}">
-                        <img src="${f}.svg" alt="" onerror="this.style.display='none'">${factionNames[f]}
-                      </span>`;
-      });
-      majorChipsEl.innerHTML = majorHtml;
+function buildNationChips() {
+  // 主国：任意 + 5 大国
+  let majorHtml = `<span class="filter-chip${currentMajor === '' ? ' active' : ''}" data-val="">任意</span>`;
+  mainNationOptions.forEach(f => {
+    const bg = factionColor[f] || '#1e293b';
+    const fg = getContrastColor(bg);
+    majorHtml += `<span class="filter-chip nation-chip${currentMajor === f ? ' active' : ''}" data-val="${f}" style="--nation-bg: ${bg}; --nation-fg: ${fg};">
+                    <img src="${f}.svg" alt="" onerror="this.style.display='none'">${factionNames[f]}
+                  </span>`;
+  });
+  majorChipsEl.innerHTML = majorHtml;
 
-      // 盟国：任意 + 全部国家
-      let allyHtml = `<span class="filter-chip${currentAlly === '' ? ' active' : ''}" data-val="">任意</span>`;
-      allNationOptions.forEach(f => {
-        allyHtml += `<span class="filter-chip${currentAlly === f ? ' active' : ''}" data-val="${f}">
-                       <img src="${f}.svg" alt="" onerror="this.style.display='none'">${factionNames[f]}
-                     </span>`;
-      });
-      allyChipsEl.innerHTML = allyHtml;
-    }
+  // 盟国：任意 + 全部国家
+  let allyHtml = `<span class="filter-chip${currentAlly === '' ? ' active' : ''}" data-val="">任意</span>`;
+  allNationOptions.forEach(f => {
+    const bg = factionColor[f] || '#1e293b';
+    const fg = getContrastColor(bg);
+    allyHtml += `<span class="filter-chip nation-chip${currentAlly === f ? ' active' : ''}" data-val="${f}" style="--nation-bg: ${bg}; --nation-fg: ${fg};">
+                   <img src="${f}.svg" alt="" onerror="this.style.display='none'">${factionNames[f]}
+                 </span>`;
+  });
+  allyChipsEl.innerHTML = allyHtml;
+}
 
     // ===== chip 单选绑定 =====
     function bindSingleSelectChips(container, onSelect) {
