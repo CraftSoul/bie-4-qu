@@ -941,7 +941,7 @@ function buildNationChips() {
           loadingEl.classList.remove('show');
 
         } else if (apiType === 'kapi') {
-          const response = await fetch('https://kapi-v7wl.onrender.com/generate', {
+          const response = await fetch('https://karsenal-api.netlify.app/.netlify/functions/generate', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -949,7 +949,6 @@ function buildNationChips() {
             body: JSON.stringify({
               deckCode: code,
               cols: 8,
-              scale: 30,
               statsTitle: name
             })
           });
