@@ -136,18 +136,18 @@
     }
     .filter-chip.active:hover, .tag-chip.active:hover { background: #0f172a; }
     .filter-chip.nation-chip.active {
-  background: var(--nation-bg, #1e293b);
-  color: var(--nation-fg, #ffffff);
-  border-color: var(--nation-bg, #1e293b);
-  font-weight: 600;
-}
-.filter-chip.nation-chip.active:hover {
-  background: var(--nation-bg, #0f172a);
-  filter: brightness(1.08);
-}
-.filter-chip.nation-chip.active img {
-  filter: none;
-}
+      background: var(--nation-bg, #1e293b);
+      color: var(--nation-fg, #ffffff);
+      border-color: var(--nation-bg, #1e293b);
+      font-weight: 600;
+    }
+    .filter-chip.nation-chip.active:hover {
+      background: var(--nation-bg, #0f172a);
+      filter: brightness(1.08);
+    }
+    .filter-chip.nation-chip.active img {
+      filter: none;
+    }
     .filter-chip img {
       width: 18px;
       height: 18px;
@@ -245,8 +245,8 @@
 
     /* 阵营图标：无外框背景，纯图标 */
     .nation-icon {
-      width: 30px;
-      height: 30px;
+      width: 25px;
+      height: 25px;
       object-fit: contain;
       flex-shrink: 0;
       filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35));
@@ -471,12 +471,12 @@
     </div>
 
     <div class="filter-row">
-      <div class="filter-label"><i class="fas fa-flag"></i> 主国</div>
+      <div class="filter-label"><i class="fas fa-flag"></i> 主国 <span style="font-weight:400; font-size:0.7rem; color:#94a3b8;">(可多选)</span></div>
       <div class="filter-chips" id="majorChips"></div>
     </div>
 
     <div class="filter-row">
-      <div class="filter-label"><i class="fas fa-handshake"></i> 盟国</div>
+      <div class="filter-label"><i class="fas fa-handshake"></i> 盟国 <span style="font-weight:400; font-size:0.7rem; color:#94a3b8;">(可多选)</span></div>
       <div class="filter-chips" id="allyChips"></div>
     </div>
 
@@ -636,12 +636,14 @@
     let filteredDecks = [];
     let currentPage = 1;
     const PAGE_SIZE = 12;
+
+    // 多选状态 (使用 Set)
+    let selectedMajors = new Set();   // 空 Set 表示任意
+    let selectedAllies = new Set();   // 空 Set 表示任意
     let activeTags = new Set();
 
     // 单选状态
     let currentStatus = 'all';   // 'all' | 'active' | 'reserve'
-    let currentMajor = '';       // '' 表示任意
-    let currentAlly = '';        // '' 表示任意
 
     // API 状态：默认 'kapi' (军械库)
     let currentApi = 'kapi';
@@ -689,41 +691,68 @@
 
     const splashSufanBtn = document.getElementById('splashSufanBtn');
 
-    // ===== 构建主国 / 盟国 chips =====
-function buildNationChips() {
-  // 主国：任意 + 5 大国
-  let majorHtml = `<span class="filter-chip${currentMajor === '' ? ' active' : ''}" data-val="">任意</span>`;
-  mainNationOptions.forEach(f => {
-    const bg = factionColor[f] || '#1e293b';
-    const fg = getContrastColor(bg);
-    majorHtml += `<span class="filter-chip nation-chip${currentMajor === f ? ' active' : ''}" data-val="${f}" style="--nation-bg: ${bg}; --nation-fg: ${fg};">
-                    <img src="${f}.svg" alt="" onerror="this.style.display='none'">${factionNames[f]}
-                  </span>`;
-  });
-  majorChipsEl.innerHTML = majorHtml;
+    // ===== 构建主国 / 盟国 chips（支持多选）=====
+    function buildNationChips() {
+      // 主国：任意 + 5 大国 (多选)
+      let majorHtml = `<span class="filter-chip${selectedMajors.size === 0 ? ' active' : ''}" data-val="">任意</span>`;
+      mainNationOptions.forEach(f => {
+        const bg = factionColor[f] || '#1e293b';
+        const fg = getContrastColor(bg);
+        const isActive = selectedMajors.has(f);
+        majorHtml += `<span class="filter-chip nation-chip${isActive ? ' active' : ''}" data-val="${f}" style="--nation-bg: ${bg}; --nation-fg: ${fg};">
+                        <img src="${f}.svg" alt="" onerror="this.style.display='none'">${factionNames[f]}
+                      </span>`;
+      });
+      majorChipsEl.innerHTML = majorHtml;
 
-  // 盟国：任意 + 全部国家
-  let allyHtml = `<span class="filter-chip${currentAlly === '' ? ' active' : ''}" data-val="">任意</span>`;
-  allNationOptions.forEach(f => {
-    const bg = factionColor[f] || '#1e293b';
-    const fg = getContrastColor(bg);
-    allyHtml += `<span class="filter-chip nation-chip${currentAlly === f ? ' active' : ''}" data-val="${f}" style="--nation-bg: ${bg}; --nation-fg: ${fg};">
-                   <img src="${f}.svg" alt="" onerror="this.style.display='none'">${factionNames[f]}
-                 </span>`;
-  });
-  allyChipsEl.innerHTML = allyHtml;
-}
+      // 盟国：任意 + 全部国家 (多选)
+      let allyHtml = `<span class="filter-chip${selectedAllies.size === 0 ? ' active' : ''}" data-val="">任意</span>`;
+      allNationOptions.forEach(f => {
+        const bg = factionColor[f] || '#1e293b';
+        const fg = getContrastColor(bg);
+        const isActive = selectedAllies.has(f);
+        allyHtml += `<span class="filter-chip nation-chip${isActive ? ' active' : ''}" data-val="${f}" style="--nation-bg: ${bg}; --nation-fg: ${fg};">
+                       <img src="${f}.svg" alt="" onerror="this.style.display='none'">${factionNames[f]}
+                     </span>`;
+      });
+      allyChipsEl.innerHTML = allyHtml;
+    }
 
-    // ===== chip 单选绑定 =====
-    function bindSingleSelectChips(container, onSelect) {
+    // ===== chip 多选绑定 =====
+    function bindMultiSelectChips(container, selectedSet, onChange) {
       container.addEventListener('click', function(e) {
         const chip = e.target.closest('.filter-chip');
         if (!chip) return;
         const val = chip.dataset.val;
-        // 单选：清空所有 active
-        container.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        onSelect(val);
+
+        // 点击“任意”：清空所有选择
+        if (val === '') {
+          selectedSet.clear();
+          // 更新所有 chip 状态
+          container.querySelectorAll('.filter-chip').forEach(c => {
+            c.classList.toggle('active', c.dataset.val === '');
+          });
+          onChange();
+          return;
+        }
+
+        // 点击具体国家：切换选中状态
+        if (selectedSet.has(val)) {
+          selectedSet.delete(val);
+          chip.classList.remove('active');
+        } else {
+          selectedSet.add(val);
+          chip.classList.add('active');
+        }
+
+        // 如果 set 为空，则“任意”chip 高亮
+        if (selectedSet.size === 0) {
+          container.querySelector('.filter-chip[data-val=""]').classList.add('active');
+        } else {
+          container.querySelector('.filter-chip[data-val=""]').classList.remove('active');
+        }
+
+        onChange();
       });
     }
 
@@ -901,7 +930,7 @@ function buildNationChips() {
       });
     };
 
-    // ----- 预览 -----
+    // ----- 预览（电脑端 KAPI 使用 10 列）-----
     window.previewCard = async function(code, name) {
       if (!code) { alert('卡组代码为空，无法预览'); return; }
 
@@ -941,6 +970,10 @@ function buildNationChips() {
           loadingEl.classList.remove('show');
 
         } else if (apiType === 'kapi') {
+          // 电脑端使用 10 列，移动端可以保留 8 列（检测窗口宽度）
+          const isDesktop = window.innerWidth > 768;
+          const cols = isDesktop ? 10 : 8;
+
           const response = await fetch('https://karsenal-api.netlify.app/.netlify/functions/generate', {
             method: 'POST',
             headers: {
@@ -948,7 +981,7 @@ function buildNationChips() {
             },
             body: JSON.stringify({
               deckCode: code,
-              cols: 8,
+              cols: cols,
               statsTitle: name
             })
           });
@@ -1046,7 +1079,7 @@ function buildNationChips() {
       });
     }
 
-    // ----- 筛选 -----
+    // ----- 筛选（支持主国/盟国多选）-----
     function getFilteredDecks() {
       const search = searchInput.value.trim().toLowerCase();
 
@@ -1056,8 +1089,11 @@ function buildNationChips() {
         if (currentStatus === 'active' && deck.isReserve) return false;
         if (currentStatus === 'reserve' && !deck.isReserve) return false;
 
-        if (currentMajor && deck.mainNation !== currentMajor) return false;
-        if (currentAlly && deck.allyNation !== currentAlly) return false;
+        // 主国多选逻辑：若 set 非空，则卡组主国必须在 set 中
+        if (selectedMajors.size > 0 && !selectedMajors.has(deck.mainNation)) return false;
+
+        // 盟国多选逻辑：若 set 非空，则卡组盟国必须在 set 中
+        if (selectedAllies.size > 0 && !selectedAllies.has(deck.allyNation)) return false;
 
         if (activeTags.size > 0) {
           const deckTagsLower = deck.types.map(t => t.toLowerCase());
@@ -1108,19 +1144,15 @@ function buildNationChips() {
     function resetFilters() {
       searchInput.value = '';
       currentStatus = 'all';
-      currentMajor = '';
-      currentAlly = '';
+      selectedMajors.clear();
+      selectedAllies.clear();
       activeTags.clear();
       // 恢复 chip 的 active 状态
       statusChipsEl.querySelectorAll('.filter-chip').forEach(c => {
         c.classList.toggle('active', c.dataset.val === 'all');
       });
-      majorChipsEl.querySelectorAll('.filter-chip').forEach(c => {
-        c.classList.toggle('active', c.dataset.val === '');
-      });
-      allyChipsEl.querySelectorAll('.filter-chip').forEach(c => {
-        c.classList.toggle('active', c.dataset.val === '');
-      });
+      // 重建国家 chips 以反映清除后的多选状态
+      buildNationChips();
       tagChipsEl.querySelectorAll('.tag-chip').forEach(c => c.classList.remove('active'));
       applyFilters();
     }
@@ -1137,24 +1169,25 @@ function buildNationChips() {
 
     // ----- 初始化 -----
     async function init() {
-      // 构建主/盟国 chips（用动态数据）
+      // 构建主/盟国 chips（多选）
       buildNationChips();
 
       // 状态单选
-      bindSingleSelectChips(statusChipsEl, v => {
-        currentStatus = v;
+      statusChipsEl.addEventListener('click', function(e) {
+        const chip = e.target.closest('.filter-chip');
+        if (!chip) return;
+        const val = chip.dataset.val;
+        statusChipsEl.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        currentStatus = val;
         applyFilters();
       });
-      // 主国单选
-      bindSingleSelectChips(majorChipsEl, v => {
-        currentMajor = v;
-        applyFilters();
-      });
-      // 盟国单选
-      bindSingleSelectChips(allyChipsEl, v => {
-        currentAlly = v;
-        applyFilters();
-      });
+
+      // 主国多选
+      bindMultiSelectChips(majorChipsEl, selectedMajors, applyFilters);
+      // 盟国多选
+      bindMultiSelectChips(allyChipsEl, selectedAllies, applyFilters);
+
       // 搜索框
       searchInput.addEventListener('input', applyFilters);
 
