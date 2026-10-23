@@ -396,7 +396,65 @@
     .sufan-modal .modal-box .sufan-content .thanks .name-list li:last-child { border-bottom: none; }
     .sufan-modal .modal-box .sufan-content .thanks .name-list .person { font-weight: 500; color: #0f172a; }
     .sufan-modal .modal-box .sufan-content .thanks .name-list .desc { color: #64748b; font-size: 0.85rem; }
-    .sufan-modal .modal-actions { flex-shrink: 0; margin-top: 1.2rem; }
+
+    /* 新增：鸣谢条图片背景 + 个人主页链接 */
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li {
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      padding: 0.35rem 0.8rem;      /* 增加内边距让背景更明显 */
+      margin-bottom: 2px;
+      z-index: 0;
+      transition: background 0.15s;
+    }
+    /* 右侧图片背景，向左淡出 */
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 80px;                  /* 与行同高，宽度足够展示图片 */
+      height: 100%;
+      background-size: cover;
+      background-position: center right;
+      background-repeat: no-repeat;
+      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+      mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+      opacity: 0.85;
+      z-index: -1;
+      pointer-events: none;
+    }
+    /* 为每个鸣谢项指定不同的背景图片（索引1-9，第八张为7.png） */
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(1)::before { background-image: url('1.webp'); }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(2)::before { background-image: url('2.webp'); }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(3)::before { background-image: url('3.webp'); }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(4)::before { background-image: url('4.webp'); }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(5)::before { background-image: url('5.webp'); }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(6)::before { background-image: url('6.webp'); }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(7)::before { background-image: url('7.webp'); }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(8)::before { background-image: url('7.png'); }  /* 第八张为7.png */
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(9)::before { background-image: url('9.webp'); }
+
+    /* 个人主页跳转（占位链接） */
+    .sufan-modal .modal-box .sufan-content .thanks .name-list .person-link {
+      text-decoration: none;
+      color: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list .person-link:hover {
+      text-decoration: underline;
+      color: #0f172a;
+    }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list .person-link .external-icon {
+      font-size: 0.65rem;
+      opacity: 0.6;
+      transition: 0.15s;
+    }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list .person-link:hover .external-icon {
+      opacity: 1;
+    }
 
     /* 加载状态 */
     .preview-loading { display: none; align-items: center; justify-content: center; gap: 12px; padding: 20px; color: #475569; font-size: 0.95rem; }
@@ -435,6 +493,8 @@
       .api-toggle-btn { font-size: 0.7rem; padding: 0.1rem 0.7rem; height: 26px; }
       .sufan-modal .modal-box .sufan-content .thanks .name-list .person { min-width: 70px; }
       .sufan-modal .modal-box .sufan-content .thanks .name-list .desc { min-width: 60px; }
+      /* 移动端背景图稍微缩小 */
+      .sufan-modal .modal-box .sufan-content .thanks .name-list li::before { width: 60px; }
     }
   </style>
 </head>
@@ -499,10 +559,10 @@
   <div id="cardGrid" class="card-grid"><div class="loading"><i class="fas fa-spinner fa-pulse"></i> 加载卡组数据…</div></div>
 </div>
 
-<!-- 开屏弹窗 -->
+<!-- 开屏弹窗（图片改为 sam.webp） -->
 <div class="modal-overlay" id="splashModal">
   <div class="modal-box">
-    <img src="https://images.weserv.nl/?url=ssl:www.kards.com/images/card/v53/zh-Hans/uncle_sam.avif&q=100" alt="Uncle Sam" style="border-radius:12px;box-shadow: 0 8px 20px rgba(0,0,0,0.5);border: 1px solid #c7aa60;">
+    <img src="sam.webp" alt="Uncle Sam" style="border-radius:12px;box-shadow: 0 8px 20px rgba(0,0,0,0.5);border: 1px solid #c7aa60;">
     <h2>你关注百年匠魂了吗？</h2>
     <p>你已被列入 <button class="splash-sufan-highlight" id="splashSufanBtn">「肃反名单」</button></p>
     <p><a href="https://craftsoul.github.io/soviettap/">拉伸Tap</a></p>
@@ -543,7 +603,7 @@
   </div>
 </div>
 
-<!-- 肃反名单弹窗 -->
+<!-- 肃反名单弹窗（鸣谢条已添加图片背景和个人主页链接） -->
 <div class="modal-overlay sufan-modal" id="sufanModal" style="display:none;">
   <div class="modal-box">
     <button class="modal-close" id="sufanCloseBtn">&times;</button>
@@ -555,15 +615,15 @@
         <div class="thanks">
           <span class="thanks-title">特别鸣谢：</span>
           <ul class="name-list">
-            <li><span class="person">百年匠魂</span><span class="desc">技术工兵</span></li>
-            <li><span class="person">别-4</span><span class="desc">背水一战</span></li>
-            <li><span class="person">＂速切玩家＂</span><span class="desc">卡后室了</span></li>
-            <li><span class="person">𝙔𝙊𝙐</span><span class="desc">沈幼楚喵</span></li>
-            <li><span class="person">狂三様のネコ</span><span class="desc">至善至美</span></li>
-            <li><span class="person">Ｂｅｏｗｕｌｆ</span><span class="desc">一只猫娘</span></li>
-            <li><span class="person">high</span><span class="desc">高人来了</span></li>
-            <li><span class="person">我是…バカ？！！</span><span class="desc">Baka</span></li>
-            <li><span class="person">亻尔女子口马（周末在线)</span><span class="desc">114514</span></li>
+            <li><a class="person-link" href="#" target="_blank"><span class="person">百年匠魂</span><i class="fas fa-external-link-alt external-icon"></i></a><span class="desc">技术工兵</span></li>
+            <li><a class="person-link" href="#" target="_blank"><span class="person">别-4</span><i class="fas fa-external-link-alt external-icon"></i></a><span class="desc">背水一战</span></li>
+            <li><a class="person-link" href="#" target="_blank"><span class="person">＂速切玩家＂</span><i class="fas fa-external-link-alt external-icon"></i></a><span class="desc">卡后室了</span></li>
+            <li><a class="person-link" href="#" target="_blank"><span class="person">𝙔𝙊𝙐</span><i class="fas fa-external-link-alt external-icon"></i></a><span class="desc">沈幼楚喵</span></li>
+            <li><a class="person-link" href="#" target="_blank"><span class="person">狂三様のネコ</span><i class="fas fa-external-link-alt external-icon"></i></a><span class="desc">至善至美</span></li>
+            <li><a class="person-link" href="#" target="_blank"><span class="person">Ｂｅｏｗｕｌｆ</span><i class="fas fa-external-link-alt external-icon"></i></a><span class="desc">一只猫娘</span></li>
+            <li><a class="person-link" href="#" target="_blank"><span class="person">high</span><i class="fas fa-external-link-alt external-icon"></i></a><span class="desc">高人来了</span></li>
+            <li><a class="person-link" href="#" target="_blank"><span class="person">我是…バカ？！！</span><i class="fas fa-external-link-alt external-icon"></i></a><span class="desc">Baka</span></li>
+            <li><a class="person-link" href="#" target="_blank"><span class="person">亻尔女子口马（周末在线)</span><i class="fas fa-external-link-alt external-icon"></i></a><span class="desc">114514</span></li>
           </ul>
         </div>
       </div>
