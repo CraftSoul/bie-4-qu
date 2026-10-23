@@ -75,6 +75,62 @@
     .api-toggle-btn:hover { background: #e2e8f0; }
     .api-toggle-btn.active-api { background: #1e293b; color: white; }
 
+    /* 随机顺序开关 */
+    .random-order-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: white;
+      padding: 0.2rem 0.4rem 0.2rem 0.8rem;
+      border-radius: 40px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+      height: 40px;
+    }
+    .random-order-wrapper span {
+      font-size: 0.8rem;
+      color: #475569;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .random-order-switch {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+    .random-order-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .random-order-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #cbd5e1;
+      border-radius: 30px;
+      transition: 0.2s;
+    }
+    .random-order-slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      border-radius: 50%;
+      transition: 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .random-order-switch input:checked + .random-order-slider {
+      background-color: #1e293b;
+    }
+    .random-order-switch input:checked + .random-order-slider:before {
+      transform: translateX(18px);
+    }
+
     /* ===== 筛选栏 — 纵向统一 ===== */
     .filter-bar {
       display: flex;
@@ -365,6 +421,41 @@
     .random-modal .modal-box .deck-card .card-header { margin-bottom: 0; }
     .random-modal .modal-box .deck-card .deck-code { margin-top: 0.1rem; margin-bottom: 0.4rem; }
 
+    /* 随机弹窗底部换页 */
+    .random-modal .random-pager {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .random-modal .random-pager .pager-info {
+      font-size: 0.8rem;
+      color: #64748b;
+      background: #f1f5f9;
+      padding: 0.2rem 0.9rem;
+      border-radius: 30px;
+      white-space: nowrap;
+    }
+    .random-modal .random-pager .pager-btn {
+      background: white;
+      border: 1px solid #dce1e9;
+      color: #1e293b;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 36px;
+      justify-content: center;
+    }
+    .random-modal .random-pager .pager-btn:hover:not(:disabled) { background: #f1f5f9; border-color: #b9c4d4; }
+    .random-modal .random-pager .pager-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
     /* 肃反名单 */
     .sufan-modal .modal-box {
       max-width: 560px;
@@ -397,63 +488,54 @@
     .sufan-modal .modal-box .sufan-content .thanks .name-list .person { font-weight: 500; color: #0f172a; }
     .sufan-modal .modal-box .sufan-content .thanks .name-list .desc { color: #64748b; font-size: 0.85rem; }
 
-    /* 新增：鸣谢条图片背景 + 个人主页链接 */
+    /* 鸣谢条图片背景 + 个人主页链接（从0开始的索引，横铺满，无跳转图标） */
     .sufan-modal .modal-box .sufan-content .thanks .name-list li {
       position: relative;
       overflow: hidden;
       border-radius: 8px;
-      padding: 0.35rem 0.8rem;      /* 增加内边距让背景更明显 */
+      padding: 0.35rem 0.8rem;
       margin-bottom: 2px;
       z-index: 0;
       transition: background 0.15s;
     }
-    /* 右侧图片背景，向左淡出 */
+    /* 背景图片：横铺满整行，左侧淡出 */
     .sufan-modal .modal-box .sufan-content .thanks .name-list li::before {
       content: '';
       position: absolute;
       top: 0;
-      right: 0;
-      width: 80px;                  /* 与行同高，宽度足够展示图片 */
+      left: 0;
+      width: 100%;
       height: 100%;
       background-size: cover;
       background-position: center right;
       background-repeat: no-repeat;
-      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
-      mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
-      opacity: 0.85;
+      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 100%);
+      mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 100%);
+      opacity: 0.82;
       z-index: -1;
       pointer-events: none;
     }
-    /* 为每个鸣谢项指定不同的背景图片（索引1-9，第八张为7.png） */
-    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(1)::before { background-image: url('1.webp'); }
-    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(2)::before { background-image: url('2.webp'); }
-    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(3)::before { background-image: url('3.webp'); }
-    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(4)::before { background-image: url('4.webp'); }
-    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(5)::before { background-image: url('5.webp'); }
-    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(6)::before { background-image: url('6.webp'); }
-    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(7)::before { background-image: url('7.webp'); }
-    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(8)::before { background-image: url('7.png'); }  /* 第八张为7.png */
-    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(9)::before { background-image: url('9.webp'); }
+    /* 索引从0开始：第1行→0.webp，第8行→7.png，其余按序 */
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(1)::before { background-image: url('0.webp'); }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(2)::before { background-image: url('1.webp'); }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(3)::before { background-image: url('2.webp'); }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(4)::before { background-image: url('3.webp'); }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(5)::before { background-image: url('4.webp'); }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(6)::before { background-image: url('5.webp'); }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(7)::before { background-image: url('6.webp'); }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(8)::before { background-image: url('7.png'); }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(9)::before { background-image: url('8.webp'); }
 
-    /* 个人主页跳转（占位链接） */
+    /* 个人主页跳转（占位链接）—— 移除跳转图标 */
     .sufan-modal .modal-box .sufan-content .thanks .name-list .person-link {
       text-decoration: none;
       color: inherit;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
     }
     .sufan-modal .modal-box .sufan-content .thanks .name-list .person-link:hover {
       text-decoration: underline;
       color: #0f172a;
-    }
-    .sufan-modal .modal-box .sufan-content .thanks .name-list .person-link .external-icon {
-      font-size: 0.65rem;
-      opacity: 0.6;
-      transition: 0.15s;
-    }
-    .sufan-modal .modal-box .sufan-content .thanks .name-list .person-link:hover .external-icon {
-      opacity: 1;
     }
 
     /* 加载状态 */
@@ -491,10 +573,10 @@
       .api-toggle-wrapper { padding: 0.2rem 0.6rem; height: 36px; }
       .api-toggle-wrapper span { font-size: 0.7rem; }
       .api-toggle-btn { font-size: 0.7rem; padding: 0.1rem 0.7rem; height: 26px; }
+      .random-order-wrapper { padding: 0.2rem 0.6rem; height: 36px; }
+      .random-order-wrapper span { font-size: 0.7rem; }
       .sufan-modal .modal-box .sufan-content .thanks .name-list .person { min-width: 70px; }
       .sufan-modal .modal-box .sufan-content .thanks .name-list .desc { min-width: 60px; }
-      /* 移动端背景图稍微缩小 */
-      .sufan-modal .modal-box .sufan-content .thanks .name-list li::before { width: 60px; }
     }
   </style>
 </head>
@@ -508,6 +590,13 @@
         <button class="api-toggle-btn" id="apiToggleBtn">
           <span id="apiLabel">军械库</span>
         </button>
+      </div>
+      <div class="random-order-wrapper">
+        <span><i class="fas fa-shuffle"></i> 随机顺序</span>
+        <label class="random-order-switch">
+          <input type="checkbox" id="randomOrderToggle" checked>
+          <span class="random-order-slider"></span>
+        </label>
       </div>
       <button class="random-btn" id="randomBtn"><i class="fas fa-dice"></i> 随机卡组</button>
       <button class="sufan-btn" id="sufanBtn"><i class="fas fa-scroll"></i> 肃反名单</button>
@@ -559,7 +648,7 @@
   <div id="cardGrid" class="card-grid"><div class="loading"><i class="fas fa-spinner fa-pulse"></i> 加载卡组数据…</div></div>
 </div>
 
-<!-- 开屏弹窗（图片改为 sam.webp） -->
+<!-- 开屏弹窗 -->
 <div class="modal-overlay" id="splashModal">
   <div class="modal-box">
     <img src="sam.webp" alt="Uncle Sam" style="border-radius:12px;box-shadow: 0 8px 20px rgba(0,0,0,0.5);border: 1px solid #c7aa60;">
@@ -587,7 +676,7 @@
   </div>
 </div>
 
-<!-- 随机卡组弹窗 -->
+<!-- 随机卡组弹窗（底部添加换页） -->
 <div class="modal-overlay random-modal" id="randomModal" style="display:none;">
   <div class="modal-box">
     <button class="modal-close" id="randomCloseBtn">&times;</button>
@@ -596,6 +685,12 @@
       <span class="random-hint"><i class="fas fa-filter"></i> 从当前筛选结果中随机抽取</span>
     </div>
     <div id="randomCardContainer"></div>
+    <!-- 换页控件 -->
+    <div class="random-pager">
+      <button class="pager-btn" id="randomPrevBtn" disabled><i class="fas fa-chevron-left"></i></button>
+      <span class="pager-info" id="randomPageInfo">1 / 1</span>
+      <button class="pager-btn" id="randomNextBtn" disabled><i class="fas fa-chevron-right"></i></button>
+    </div>
     <div class="modal-actions" style="margin-top:0.8rem;">
       <button class="btn-secondary" id="randomCloseBtn2">关闭</button>
       <button class="btn-redraw" id="randomRedrawBtn"><i class="fas fa-sync-alt"></i> 再抽一次</button>
@@ -603,7 +698,7 @@
   </div>
 </div>
 
-<!-- 肃反名单弹窗（鸣谢条已添加图片背景和个人主页链接） -->
+<!-- 肃反名单弹窗（鸣谢条图片背景从0开始、横铺满、移除跳转图标） -->
 <div class="modal-overlay sufan-modal" id="sufanModal" style="display:none;">
   <div class="modal-box">
     <button class="modal-close" id="sufanCloseBtn">&times;</button>
@@ -615,15 +710,15 @@
         <div class="thanks">
           <span class="thanks-title">特别鸣谢：</span>
           <ul class="name-list">
-            <li><a class="person-link" href="#" target="_blank"><span class="person">百年匠魂</span><i class="fas fa-external-link-alt external-icon"></i></a><span class="desc">技术工兵</span></li>
-            <li><a class="person-link" href="#" target="_blank"><span class="person">别-4</span><i class="fas fa-external-link-alt external-icon"></i></a><span class="desc">背水一战</span></li>
-            <li><a class="person-link" href="#" target="_blank"><span class="person">＂速切玩家＂</span><i class="fas fa-external-link-alt external-icon"></i></a><span class="desc">卡后室了</span></li>
-            <li><a class="person-link" href="#" target="_blank"><span class="person">𝙔𝙊𝙐</span><i class="fas fa-external-link-alt external-icon"></i></a><span class="desc">沈幼楚喵</span></li>
-            <li><a class="person-link" href="#" target="_blank"><span class="person">狂三様のネコ</span><i class="fas fa-external-link-alt external-icon"></i></a><span class="desc">至善至美</span></li>
-            <li><a class="person-link" href="#" target="_blank"><span class="person">Ｂｅｏｗｕｌｆ</span><i class="fas fa-external-link-alt external-icon"></i></a><span class="desc">一只猫娘</span></li>
-            <li><a class="person-link" href="#" target="_blank"><span class="person">high</span><i class="fas fa-external-link-alt external-icon"></i></a><span class="desc">高人来了</span></li>
-            <li><a class="person-link" href="#" target="_blank"><span class="person">我是…バカ？！！</span><i class="fas fa-external-link-alt external-icon"></i></a><span class="desc">Baka</span></li>
-            <li><a class="person-link" href="#" target="_blank"><span class="person">亻尔女子口马（周末在线)</span><i class="fas fa-external-link-alt external-icon"></i></a><span class="desc">114514</span></li>
+            <li><a class="person-link" href="#" target="_blank"><span class="person">百年匠魂</span></a><span class="desc">技术工兵</span></li>
+            <li><a class="person-link" href="#" target="_blank"><span class="person">别-4</span></a><span class="desc">背水一战</span></li>
+            <li><a class="person-link" href="#" target="_blank"><span class="person">＂速切玩家＂</span></a><span class="desc">卡后室了</span></li>
+            <li><a class="person-link" href="#" target="_blank"><span class="person">𝙔𝙊𝙐</span></a><span class="desc">沈幼楚喵</span></li>
+            <li><a class="person-link" href="#" target="_blank"><span class="person">狂三様のネコ</span></a><span class="desc">至善至美</span></li>
+            <li><a class="person-link" href="#" target="_blank"><span class="person">Ｂｅｏｗｕｌｆ</span></a><span class="desc">一只猫娘</span></li>
+            <li><a class="person-link" href="#" target="_blank"><span class="person">high</span></a><span class="desc">高人来了</span></li>
+            <li><a class="person-link" href="#" target="_blank"><span class="person">我是…バカ？！！</span></a><span class="desc">Baka</span></li>
+            <li><a class="person-link" href="#" target="_blank"><span class="person">亻尔女子口马（周末在线)</span></a><span class="desc">114514</span></li>
           </ul>
         </div>
       </div>
@@ -708,8 +803,16 @@
     // API 状态：默认 'kapi' (军械库)
     let currentApi = 'kapi';
 
+    // 随机顺序开关（默认开）
+    let randomOrderEnabled = true;
+
     // 预览缓存：key = apiType + code, value = imageUrl
     const previewCache = new Map();
+
+    // 随机卡组弹窗：当前池子与索引
+    let randomPool = [];
+    let randomIndex = 0;
+    let randomPage = 1;
 
     // DOM refs
     const gridEl = document.getElementById('cardGrid');
@@ -738,11 +841,17 @@
     const apiToggleBtn = document.getElementById('apiToggleBtn');
     const apiLabel = document.getElementById('apiLabel');
 
+    // 随机顺序开关
+    const randomOrderToggle = document.getElementById('randomOrderToggle');
+
     const randomModal = document.getElementById('randomModal');
     const randomCardContainer = document.getElementById('randomCardContainer');
     const randomCloseBtn = document.getElementById('randomCloseBtn');
     const randomCloseBtn2 = document.getElementById('randomCloseBtn2');
     const randomRedrawBtn = document.getElementById('randomRedrawBtn');
+    const randomPrevBtn = document.getElementById('randomPrevBtn');
+    const randomNextBtn = document.getElementById('randomNextBtn');
+    const randomPageInfo = document.getElementById('randomPageInfo');
 
     const sufanModal = document.getElementById('sufanModal');
     const sufanBtn = document.getElementById('sufanBtn');
@@ -753,7 +862,6 @@
 
     // ===== 构建主国 / 盟国 chips（支持多选）=====
     function buildNationChips() {
-      // 主国：任意 + 5 大国 (多选)
       let majorHtml = `<span class="filter-chip${selectedMajors.size === 0 ? ' active' : ''}" data-val="">任意</span>`;
       mainNationOptions.forEach(f => {
         const bg = factionColor[f] || '#1e293b';
@@ -765,7 +873,6 @@
       });
       majorChipsEl.innerHTML = majorHtml;
 
-      // 盟国：任意 + 全部国家 (多选)
       let allyHtml = `<span class="filter-chip${selectedAllies.size === 0 ? ' active' : ''}" data-val="">任意</span>`;
       allNationOptions.forEach(f => {
         const bg = factionColor[f] || '#1e293b';
@@ -785,10 +892,8 @@
         if (!chip) return;
         const val = chip.dataset.val;
 
-        // 点击“任意”：清空所有选择
         if (val === '') {
           selectedSet.clear();
-          // 更新所有 chip 状态
           container.querySelectorAll('.filter-chip').forEach(c => {
             c.classList.toggle('active', c.dataset.val === '');
           });
@@ -796,7 +901,6 @@
           return;
         }
 
-        // 点击具体国家：切换选中状态
         if (selectedSet.has(val)) {
           selectedSet.delete(val);
           chip.classList.remove('active');
@@ -805,7 +909,6 @@
           chip.classList.add('active');
         }
 
-        // 如果 set 为空，则“任意”chip 高亮
         if (selectedSet.size === 0) {
           container.querySelector('.filter-chip[data-val=""]').classList.add('active');
         } else {
@@ -834,6 +937,12 @@
 
     apiToggleBtn.addEventListener('click', toggleApi);
     updateApiToggle();
+
+    // 随机顺序开关
+    randomOrderToggle.addEventListener('change', function() {
+      randomOrderEnabled = this.checked;
+      applyFilters();
+    });
 
     // ----- 读取 data.xlsx -----
     function loadDataFromFile() {
@@ -888,7 +997,6 @@
         const displayName = nameRaw.replace(/\*/g, '').trim();
         const types = typeRaw.split(/\s+/).filter(t => t.trim() !== '');
 
-        // 解析主国/盟国
         const nations = extractNations(code);
 
         return {
@@ -1030,7 +1138,6 @@
           loadingEl.classList.remove('show');
 
         } else if (apiType === 'kapi') {
-          // 电脑端使用 10 列，移动端可以保留 8 列（检测窗口宽度）
           const isDesktop = window.innerWidth > 768;
           const cols = isDesktop ? 10 : 8;
 
@@ -1080,24 +1187,50 @@
     previewCloseBtn2.onclick = closePreview;
     previewModal.onclick = function(e) { if (e.target === this) closePreview(); };
 
-    // ----- 随机卡组 -----
-    function getRandomDeck() {
-      const pool = filteredDecks.length > 0 ? filteredDecks : allDecks;
-      if (pool.length === 0) return null;
-      const randomIndex = Math.floor(Math.random() * pool.length);
-      return pool[randomIndex];
+    // ----- 随机卡组（支持换页）-----
+    function shuffleArray(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function buildRandomPool() {
+      const source = filteredDecks.length > 0 ? filteredDecks : allDecks;
+      if (source.length === 0) {
+        randomPool = [];
+        return;
+      }
+      // 随机顺序开启时打乱池子，否则保持原顺序
+      randomPool = randomOrderEnabled ? shuffleArray(source) : source.slice();
+      randomIndex = 0;
+      randomPage = 1;
     }
 
     function renderRandomDeck() {
-      const deck = getRandomDeck();
-      if (!deck) {
+      if (randomPool.length === 0) {
         randomCardContainer.innerHTML = `<div class="no-data" style="padding:1rem;background:transparent;border:none;color:#94a3b8;">当前筛选无卡组，请调整筛选条件</div>`;
+        randomPageInfo.textContent = '0 / 0';
+        randomPrevBtn.disabled = true;
+        randomNextBtn.disabled = true;
         return;
       }
+      // 确保索引在范围内
+      if (randomIndex < 0) randomIndex = 0;
+      if (randomIndex >= randomPool.length) randomIndex = randomPool.length - 1;
+      randomPage = randomIndex + 1;
+
+      const deck = randomPool[randomIndex];
       randomCardContainer.innerHTML = deck.render();
+      randomPageInfo.textContent = `${randomPage} / ${randomPool.length}`;
+      randomPrevBtn.disabled = randomIndex <= 0;
+      randomNextBtn.disabled = randomIndex >= randomPool.length - 1;
     }
 
     function showRandomModal() {
+      buildRandomPool();
       renderRandomDeck();
       randomModal.style.display = 'flex';
     }
@@ -1106,10 +1239,24 @@
       randomModal.style.display = 'none';
       randomCardContainer.innerHTML = '';
     }
+
     randomCloseBtn.onclick = closeRandomModal;
     randomCloseBtn2.onclick = closeRandomModal;
     randomRedrawBtn.onclick = function() {
+      buildRandomPool();
       renderRandomDeck();
+    };
+    randomPrevBtn.onclick = function() {
+      if (randomIndex > 0) {
+        randomIndex--;
+        renderRandomDeck();
+      }
+    };
+    randomNextBtn.onclick = function() {
+      if (randomIndex < randomPool.length - 1) {
+        randomIndex++;
+        renderRandomDeck();
+      }
     };
     randomModal.onclick = function(e) { if (e.target === this) closeRandomModal(); };
 
@@ -1139,20 +1286,17 @@
       });
     }
 
-    // ----- 筛选（支持主国/盟国多选）-----
+    // ----- 筛选 -----
     function getFilteredDecks() {
       const search = searchInput.value.trim().toLowerCase();
 
-      return allDecks.filter(deck => {
+      let result = allDecks.filter(deck => {
         if (search && !deck.name.toLowerCase().includes(search) && !deck.provider.toLowerCase().includes(search)) return false;
 
         if (currentStatus === 'active' && deck.isReserve) return false;
         if (currentStatus === 'reserve' && !deck.isReserve) return false;
 
-        // 主国多选逻辑：若 set 非空，则卡组主国必须在 set 中
         if (selectedMajors.size > 0 && !selectedMajors.has(deck.mainNation)) return false;
-
-        // 盟国多选逻辑：若 set 非空，则卡组盟国必须在 set 中
         if (selectedAllies.size > 0 && !selectedAllies.has(deck.allyNation)) return false;
 
         if (activeTags.size > 0) {
@@ -1162,6 +1306,13 @@
         }
         return true;
       });
+
+      // 随机顺序开启时打乱筛选结果（但保持分页稳定：每次过滤只打乱一次）
+      if (randomOrderEnabled) {
+        result = shuffleArray(result);
+      }
+
+      return result;
     }
 
     function applyFilters() {
@@ -1207,11 +1358,9 @@
       selectedMajors.clear();
       selectedAllies.clear();
       activeTags.clear();
-      // 恢复 chip 的 active 状态
       statusChipsEl.querySelectorAll('.filter-chip').forEach(c => {
         c.classList.toggle('active', c.dataset.val === 'all');
       });
-      // 重建国家 chips 以反映清除后的多选状态
       buildNationChips();
       tagChipsEl.querySelectorAll('.tag-chip').forEach(c => c.classList.remove('active'));
       applyFilters();
@@ -1229,10 +1378,8 @@
 
     // ----- 初始化 -----
     async function init() {
-      // 构建主/盟国 chips（多选）
       buildNationChips();
 
-      // 状态单选
       statusChipsEl.addEventListener('click', function(e) {
         const chip = e.target.closest('.filter-chip');
         if (!chip) return;
@@ -1243,12 +1390,9 @@
         applyFilters();
       });
 
-      // 主国多选
       bindMultiSelectChips(majorChipsEl, selectedMajors, applyFilters);
-      // 盟国多选
       bindMultiSelectChips(allyChipsEl, selectedAllies, applyFilters);
 
-      // 搜索框
       searchInput.addEventListener('input', applyFilters);
 
       gridEl.innerHTML = `<div class="loading"><i class="fas fa-spinner fa-pulse"></i> 读取 data.xlsx …</div>`;
@@ -1262,6 +1406,10 @@
         allDecks = buildDecksFromRows(rows);
         filteredDecks = [...allDecks];
         renderTagChips();
+        // 初始加载时如果随机顺序开启，打乱一次
+        if (randomOrderEnabled) {
+          filteredDecks = shuffleArray(filteredDecks);
+        }
         renderPage(1);
       } catch (err) {
         console.error(err);
