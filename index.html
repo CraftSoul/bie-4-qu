@@ -37,7 +37,6 @@
     .random-btn { background: #2d3a4f; }
     .random-btn i { font-size: 1rem; }
 
-    /* 统一 API 切换器尺寸与按钮一致 */
     .api-toggle-wrapper {
       display: flex;
       align-items: center;
@@ -75,7 +74,6 @@
     .api-toggle-btn:hover { background: #e2e8f0; }
     .api-toggle-btn.active-api { background: #1e293b; color: white; }
 
-    /* 随机顺序开关 */
     .random-order-wrapper {
       display: flex;
       align-items: center;
@@ -125,7 +123,6 @@
       transform: translateX(16px);
     }
 
-    /* ===== 筛选栏 — 纵向统一 ===== */
     .filter-bar {
       display: flex;
       flex-direction: column;
@@ -154,7 +151,6 @@
     }
     .filter-label i { color: #94a3b8; }
 
-    /* 通用 chip（与 builder.html 一致） */
     .filter-chips, .tag-chips {
       display: flex;
       flex-wrap: wrap;
@@ -235,7 +231,6 @@
     }
     .clear-btn:hover { background: #f1f5f9; border-color: #cbd5e1; color: #1e293b; }
 
-    /* 分页 */
     .pagination-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; margin: 1rem 0 1.5rem; gap: 1rem; }
     .page-info { background: white; padding: 0.3rem 1.2rem; border-radius: 30px; font-size: 0.95rem; box-shadow: 0 1px 4px rgba(0,0,0,0.02); color: #334155; }
     .pagination-btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -243,10 +238,8 @@
     .pagination-btn:hover:not(:disabled) { background: #f1f5f9; border-color: #b9c4d4; }
     .pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* 卡片网格 */
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 0.5rem; }
 
-    /* ===== 卡组卡片 - 主国主题色 + 徽章背景 ===== */
     .deck-card {
       border-radius: 20px;
       padding: 0;
@@ -263,7 +256,6 @@
     }
     .deck-card:hover { box-shadow: 0 10px 26px rgba(0,0,0,0.22); transform: translateY(-2px); }
 
-    /* 徽章水印 */
     .deck-emblem {
       position: absolute;
       right: -30px;
@@ -293,7 +285,6 @@
     .card-header-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
     .deck-nations { display: flex; align-items: center; gap: 4px; }
 
-    /* 阵营图标：无外框背景，纯图标 */
     .nation-icon {
       width: 25px;
       height: 25px;
@@ -302,7 +293,6 @@
       filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35));
     }
 
-    /* 预备徽章：无外框背景，纯图标 */
     .reserve-badge {
       display: inline-flex;
       align-items: center;
@@ -381,7 +371,6 @@
     .preview-btn:hover { background: rgba(255,255,255,0.28); }
     .card-footer { display: flex; justify-content: flex-end; margin-top: 0.2rem; font-size: 0.6rem; color: inherit; opacity: 0.5; }
 
-    /* 弹窗体系 */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
     .preview-modal { z-index: 1100; }
 
@@ -403,19 +392,15 @@
     .no-data { text-align: center; padding: 3rem 1rem; color: #64748b; background: #f8fafc; border-radius: 40px; border: 1px dashed #dce1e9; }
     .loading { text-align: center; padding: 3rem 0; color: #94a3b8; }
 
-    /* 随机弹窗 —— 保留卡组卡片原本的主国主题色背景 */
     .random-modal .modal-box { max-width: 480px; text-align: left; }
     .random-modal .random-hint { font-size: 0.85rem; color: #64748b; margin: 0.5rem 0 0.4rem; padding: 0.2rem 0.4rem; background: #f1f5f9; border-radius: 30px; display: inline-block; }
     .random-modal .modal-actions .btn-redraw { background: #2d3a4f; color: white; }
     .random-modal .modal-actions .btn-redraw:hover { background: #1e293b; }
-    /* 随机弹窗：图标不使用圆角 */
     .random-modal .modal-box .nation-icon,
     .random-modal .modal-box .reserve-badge img { border-radius: 0; }
-    /* 随机弹窗：收紧标题-图标行与卡组代码间距 */
     .random-modal .modal-box .deck-card .card-header { margin-bottom: 0; }
     .random-modal .modal-box .deck-card .deck-code { margin-top: 0.1rem; margin-bottom: 0.4rem; }
 
-    /* 肃反名单 */
     .sufan-modal .modal-box {
       max-width: 560px;
       text-align: left;
@@ -445,7 +430,7 @@
     .sufan-modal .modal-box .sufan-content .thanks .name-list li { display: flex; align-items: baseline; justify-content: space-between; padding: 0.15rem 0; border-bottom: 1px dashed #f1f5f9; font-size: 0.9rem; }
     .sufan-modal .modal-box .sufan-content .thanks .name-list li:last-child { border-bottom: none; }
     .sufan-modal .modal-box .sufan-content .thanks .name-list .person { font-weight: 500; color: #0f172a; }
-    .sufan-modal .modal-box .sufan-content .thanks .name-list .desc { color: #000000; font-size: 0.85rem; }
+    .sufan-modal .modal-box .sufan-content .thanks .name-list .desc { color: #64748b; font-size: 0.85rem; }
 
     .sufan-modal .modal-box .sufan-content .thanks .name-list li {
       position: relative;
@@ -456,7 +441,6 @@
       z-index: 0;
       transition: background 0.15s;
     }
-    /* 图片横铺满整行背景，右侧淡出 */
     .sufan-modal .modal-box .sufan-content .thanks .name-list li::before {
       content: '';
       position: absolute;
@@ -483,7 +467,6 @@
     .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(8)::before { background-image: url('7.png'); }
     .sufan-modal .modal-box .sufan-content .thanks .name-list li:nth-child(9)::before { background-image: url('8.webp'); }
 
-    /* 个人主页链接：移除跳转图标，仅保留文字 */
     .sufan-modal .modal-box .sufan-content .thanks .name-list .person-link {
       text-decoration: none;
       color: inherit;
@@ -491,14 +474,12 @@
     .sufan-modal .modal-box .sufan-content .thanks .name-list .person-link:hover .person {
       text-decoration: underline;
     }
-    /* 描述文本改为浅色 */
     .sufan-modal .modal-box .sufan-content .thanks .name-list .desc {
-      color: #94a3b8;
+      color: #ffffff;
       font-size: 0.85rem;
       font-weight: 400;
     }
 
-    /* 加载状态 */
     .preview-loading { display: none; align-items: center; justify-content: center; gap: 12px; padding: 20px; color: #475569; font-size: 0.95rem; }
     .preview-loading.show { display: flex; }
     .preview-loading .spinner { width: 32px; height: 32px; border: 3px solid #e2e8f0; border-top-color: #3b82f6; border-radius: 50%; animation: spin 0.8s linear infinite; }
@@ -507,7 +488,6 @@
     .preview-error { display: none; color: #dc2626; background: #fef2f2; padding: 12px 16px; border-radius: 12px; font-size: 0.9rem; margin: 8px 0; }
     .preview-error.show { display: block; }
 
-    /* 开屏弹窗 */
     #splashModal .splash-sufan-highlight {
       background: transparent;
       border: none;
